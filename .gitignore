@@ -1,0 +1,4 @@
+*.app
+.alpackages
+.snapshots
+**/.vscode/rad.json
