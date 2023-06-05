@@ -1,4 +1,4 @@
-codeunit 50200 "Install Tests"
+codeunit 50200 "Install Tests BCTD23"
 {
     Subtype = Install;
 
