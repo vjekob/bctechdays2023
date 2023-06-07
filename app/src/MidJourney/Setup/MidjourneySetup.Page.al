@@ -1,10 +1,10 @@
-page 50000 "Midjourney Setup BCTD23"
+page 50000 "Midjourney Setup"
 {
     Caption = 'Midjourney Setup';
     PageType = Card;
     UsageCategory = Administration;
     ApplicationArea = All;
-    SourceTable = "Midjourney Setup BCTD23";
+    SourceTable = "Midjourney Setup";
 
     layout
     {

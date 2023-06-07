@@ -1,4 +1,4 @@
-table 50000 "Midjourney Setup BCTD23"
+table 50000 "Midjourney Setup"
 {
     Caption = 'Midjourney Setup';
     DataClassification = CustomerContent;
@@ -42,14 +42,14 @@ table 50000 "Midjourney Setup BCTD23"
 
     procedure SetAPIKey()
     var
-        SetAPIKeyMeth: Codeunit "Set API Key Meth BCTD23";
+        SetAPIKeyMeth: Codeunit "Set API Key Meth";
     begin
         SetAPIKeyMeth.SetAuthKey(Rec);
     end;
 
     procedure ClearAPIKey()
     var
-        ClearAPIKeyMeth: Codeunit "Clear API Key Meth BCTD23";
+        ClearAPIKeyMeth: Codeunit "Clear API Key Meth";
     begin
         ClearAPIKeyMeth.ClearAuthKey(Rec);
     end;

@@ -1,6 +1,6 @@
-codeunit 50001 "Set API Key Meth BCTD23"
+codeunit 50001 "Set API Key Meth"
 {
-    internal procedure SetAuthKey(var Setup: Record "Midjourney Setup BCTD23")
+    internal procedure SetAuthKey(var Setup: Record "Midjourney Setup")
     var
         IsHandled: Boolean;
     begin
@@ -9,9 +9,9 @@ codeunit 50001 "Set API Key Meth BCTD23"
         OnAfterSetAuthKey(Setup);
     end;
 
-    local procedure DoSetAuthKey(var Setup: Record "Midjourney Setup BCTD23"; IsHandled: Boolean);
+    local procedure DoSetAuthKey(var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
     var
-        APIKey: Page "Midjourney API Key BCTD23";
+        APIKey: Page "Midjourney API Key";
     begin
         if IsHandled then
             exit;
@@ -21,12 +21,12 @@ codeunit 50001 "Set API Key Meth BCTD23"
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeSetAuthKey(var Setup: Record "Midjourney Setup BCTD23"; var IsHandled: Boolean);
+    local procedure OnBeforeSetAuthKey(var Setup: Record "Midjourney Setup"; var IsHandled: Boolean);
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnAfterSetAuthKey(var Setup: Record "Midjourney Setup BCTD23");
+    local procedure OnAfterSetAuthKey(var Setup: Record "Midjourney Setup");
     begin
     end;
 }

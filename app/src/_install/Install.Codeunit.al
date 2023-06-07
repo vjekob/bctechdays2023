@@ -1,4 +1,4 @@
-codeunit 50000 "Install BCTD23"
+codeunit 50000 "Install"
 {
     Subtype = Install;
 
@@ -9,7 +9,7 @@ codeunit 50000 "Install BCTD23"
 
     local procedure InstallSetup()
     var
-        Setup: Record "Midjourney Setup BCTD23";
+        Setup: Record "Midjourney Setup";
         DoInsert: Boolean;
     begin
         if not Setup.Get() then

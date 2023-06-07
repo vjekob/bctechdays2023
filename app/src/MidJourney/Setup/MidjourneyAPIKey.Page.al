@@ -1,4 +1,4 @@
-page 50001 "Midjourney API Key BCTD23"
+page 50001 "Midjourney API Key"
 {
     Caption = 'Midjourney API Key';
     PageType = StandardDialog;
