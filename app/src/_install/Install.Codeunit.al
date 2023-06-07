@@ -15,8 +15,8 @@ codeunit 50000 "Install"
         if not Setup.Get() then
             DoInsert := true;
 
-        if Setup.URL.Trim() = '' then
-            Setup.URL := 'https://api.midjourneyapi.io/v2/';
+        if Setup."Midjourney URL".Trim() = '' then
+            Setup."Midjourney URL" := 'https://api.midjourneyapi.io/v2/';
 
         if DoInsert then
             Setup.Insert()
