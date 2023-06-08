@@ -17,7 +17,7 @@ pageextension 50000 "ItemListExt" extends "Item List"
         {
             action("GetWeight")
             {
-                Caption = 'Get Weight (New)';
+                Caption = 'Get Weight';
                 Image = GetEntries;
                 ApplicationArea = All;
 
