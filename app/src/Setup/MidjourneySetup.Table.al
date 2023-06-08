@@ -83,6 +83,23 @@ table 50000 "Midjourney Setup"
             DeleteMidjourneyAuthKey();
     end;
 
+    procedure GetForMidjourney()
+    begin
+        Rec.Get();
+        Rec.TestField("Midjourney URL");
+        Rec.TestMidjourneyAuthKey();
+    end;
+
+    procedure GetMidjourneyEndpoint(Path: Text): Text;
+    var
+        Root: Text;
+    begin
+        Root := Rec."Midjourney URL";
+        if not Root.EndsWith('/') then
+            Root += '/';
+        exit(Root + Path);
+    end;
+
     internal procedure GetAzureBLOBSharedKey() Result: Text
     begin
         if not IsolatedStorage.Get(AzureBLOBSharedKey, DataScope::Company, Result) then;
