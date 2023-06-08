@@ -1,7 +1,7 @@
 {
   "id": "e11168a4-c99d-41aa-adf2-e89127ceaf77",
   "name": "test",
-  "publisher": "Default publisher",
+  "publisher": "Vjeko & waldo",
   "version": "1.0.0.0",
   "brief": "",
   "description": "",
@@ -45,5 +45,7 @@
     "includeSourceInSymbolFile": true
   },
   "runtime": "11.0",
-  "features": ["NoImplicitWith"]
+  "features": [
+    "NoImplicitWith"
+  ]
 }
