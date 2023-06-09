@@ -65,4 +65,26 @@ codeunit 50024 "PicInScene Factory"
         _MidJourneyIsDefined := true;
     end;
     #endregion MidJourney
+
+    #region ItemWriter
+    var
+        _ItemWriter: Interface IItemWriter;
+        _ItemWriterIsDefined: Boolean;
+
+    procedure ItemWriter(): Interface IItemWriter
+    var
+        DefaultImplementationCodeunit: Codeunit "Item Pic-In-Scene Writer";
+    begin
+        if not _ItemWriterIsDefined then
+            SetItemWriter(DefaultImplementationCodeunit);
+
+        exit(_ItemWriter);
+    end;
+
+    local procedure SetItemWriter(IItemWriter: Interface IItemWriter)
+    begin
+        _ItemWriter := IItemWriter;
+        _ItemWriterIsDefined := true;
+    end;
+    #endregion ItemWriter
 }

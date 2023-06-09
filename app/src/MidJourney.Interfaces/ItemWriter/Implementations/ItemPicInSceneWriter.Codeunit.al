@@ -7,5 +7,6 @@ codeunit 50012 "Item Pic-In-Scene Writer" implements IItemWriter
     begin
         Clear(Item."Picture In Scene");
         Item."Picture In Scene".ImportStream(InStr, Description, MimeTypeTok);
+        Item.Modify(true);
     end;
 }

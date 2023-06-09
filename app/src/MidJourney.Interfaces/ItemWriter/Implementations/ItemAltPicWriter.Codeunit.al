@@ -7,5 +7,6 @@ codeunit 50011 "Item Alt-Pic Writer" implements IItemWriter
     begin
         Clear(Item."Alternative Picture");
         Item."Alternative Picture".ImportStream(InStr, Description, MimeTypeTok);
+        Item.Modify(true);
     end;
 }
