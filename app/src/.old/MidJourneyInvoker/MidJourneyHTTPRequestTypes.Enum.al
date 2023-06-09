@@ -1,23 +1,23 @@
-enum 50003 "MidJourney HTTP Request Types" implements "MidJourney HTTP Invoker"
+enum 50003 "MidJourney Http Request Types" implements "MidJourney Http Invoker"
 {
     value(1; Imagine)
     {
-        implementation = "MidJourney HTTP Invoker" = "MidJourney Imagine";
+        implementation = "MidJourney Http Invoker" = "MidJourney Imagine";
     }
     value(2; Result)
     {
-        implementation = "MidJourney HTTP Invoker" = "MidJourney Result";
+        implementation = "MidJourney Http Invoker" = "MidJourney Result";
     }
     value(3; Upscale)
     {
-        implementation = "MidJourney HTTP Invoker" = "MidJourney Upscale";
+        implementation = "MidJourney Http Invoker" = "MidJourney Upscale";
     }
     value(4; Seed)
     {
-        implementation = "MidJourney HTTP Invoker" = "MidJourney Seed";
+        implementation = "MidJourney Http Invoker" = "MidJourney Seed";
     }
     value(5; Describe)
     {
-        implementation = "MidJourney HTTP Invoker" = "MidJourney Describe";
+        implementation = "MidJourney Http Invoker" = "MidJourney Describe";
     }
 }

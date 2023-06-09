@@ -1,4 +1,4 @@
-codeunit 50017 "MidJourney Imagine" implements "MidJourney HTTP Invoker"
+codeunit 50017 "MidJourney Imagine" implements "MidJourney Http Invoker"
 {
     procedure Post(Request: HttpRequestMessage) Content: JsonObject;
     begin

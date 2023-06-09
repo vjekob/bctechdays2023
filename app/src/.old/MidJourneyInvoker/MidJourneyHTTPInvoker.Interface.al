@@ -1,4 +1,4 @@
-interface "MidJourney HTTP Invoker"
+interface "MidJourney Http Invoker"
 {
-    procedure Post(Request: HTTPRequestMessage) Content: JsonObject
+    procedure Post(Request: HttpRequestMessage) Content: JsonObject
 }

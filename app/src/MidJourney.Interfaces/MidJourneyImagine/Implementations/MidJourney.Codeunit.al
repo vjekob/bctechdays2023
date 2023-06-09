@@ -46,8 +46,8 @@ codeunit 50022 "MidJourney" implements IMidJourney
         Headers: HttpHeaders;
         RequestBodyText: Text;
         ResponseBodyText: Text;
-        BlockedByEnvironmentErr: Label 'Calling HTTP APIs is blocked by your Business Central configuration.';
-        HttpStatusErr: Label '%1: %2', Comment = '%1 is HTTP status code (number), %2 is HTTP status message';
+        BlockedByEnvironmentErr: Label 'Calling Http APIs is blocked by your Business Central configuration.';
+        HttpStatusErr: Label '%1: %2', Comment = '%1 is Http status code (number), %2 is Http status message';
     begin
         Setup.GetForMidjourney();
 
