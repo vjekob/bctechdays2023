@@ -8,18 +8,18 @@ codeunit 50045 "MidJourney Prompt Impl." implements IMidJourneyPrompt
         If ImageUrl <> '' then
             PromptList.Add(ImageUrl);
 
-        if IMidJourneySetting.GetSettingPrompt() <> '' then
-            PromptList.Add(IMidJourneySetting.GetSettingPrompt());
-
-        if IMidJourneyStyle.GetStylePrompt() <> '' then
-            PromptList.Add(IMidJourneyStyle.GetStylePrompt());
-
         CustomPrompt := FixCustomPrompt(CustomPrompt);
         if CustomPrompt <> '' then
             PromptList.Add(CustomPrompt);
 
+        if IMidJourneySetting.GetSettingPrompt() <> '' then
+            PromptList.Add(IMidJourneySetting.GetSettingPrompt());
+
         if IMidJourneyLighting.GetPrompt() <> '' then
             PromptList.Add(IMidJourneyLighting.GetPrompt());
+
+        if IMidJourneyStyle.GetStylePrompt() <> '' then
+            PromptList.Add(IMidJourneyStyle.GetStylePrompt());
 
         foreach TextInPrompt in PromptList do
             Prompt := Prompt + TextInPrompt + ', ';
