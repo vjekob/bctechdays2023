@@ -23,6 +23,10 @@ table 50004 "MidJourney Test Prompt"
         {
             DataClassification = CustomerContent;
         }
+        field(6; "Lighting"; enum "MidJourney Lighting")
+        {
+            DataClassification = CustomerContent;
+        }
     }
 
 

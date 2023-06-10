@@ -32,6 +32,10 @@ page 50005 "MidJourney Test Prompts"
                 {
                     ApplicationArea = All;
                 }
+                field(Lighting; Rec.Lighting)
+                {
+                    ApplicationArea = All;
+                }
 
             }
             group(Prompt)

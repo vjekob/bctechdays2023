@@ -19,7 +19,7 @@ codeunit 50043 "GeneratePrompt Meth"
             exit;
 
         MidJourneyPrompts := MidJourneyPromptFactory.PromptFactory();
-        Prompt := MidJourneyPrompts.Prompt(MidJourneyTestPrompt.ImageUrl, MidJourneyTestPrompt.Setting, MidJourneyTestPrompt.Style, MidJourneyTestPrompt."Aspect Ratio", CustomPrompt);
+        Prompt := MidJourneyPrompts.Prompt(MidJourneyTestPrompt.ImageUrl, MidJourneyTestPrompt.Setting, MidJourneyTestPrompt.Style, MidJourneyTestPrompt."Aspect Ratio", MidJourneyTestPrompt.Lighting, CustomPrompt);
     end;
 
     [IntegrationEvent(false, false)]

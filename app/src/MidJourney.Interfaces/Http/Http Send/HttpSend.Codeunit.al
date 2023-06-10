@@ -59,7 +59,7 @@ codeunit 50030 "HttpSend" implements IHttpSend
             if not WebResponse.IsSuccessStatusCode() then
                 SendSuccess := false;
 
-        IHttpLogger.Log(WebContent, CurrentContentType, WebRequest, WebResponse, RestHeaders, StartDateTime, TotalDuration);
+        // IHttpLogger.Log(WebContent, CurrentContentType, WebRequest, WebResponse, RestHeaders, StartDateTime, TotalDuration);
 
     end;
 

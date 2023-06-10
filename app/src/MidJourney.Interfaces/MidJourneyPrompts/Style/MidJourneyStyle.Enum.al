@@ -11,9 +11,9 @@ enum 50005 "MidJourney Style" implements "IMidJourney Style"
     {
         Implementation = "IMidJourney Style" = "MJ Style - Anime";
     }
-    value(2; ASCII)
+    value(2; Cyberpunk)
     {
-        Implementation = "IMidJourney Style" = "MJ Style - ASCII";
+        Implementation = "IMidJourney Style" = "MJ Style - Cyberpunk";
     }
     value(3; "Op Art")
     {
