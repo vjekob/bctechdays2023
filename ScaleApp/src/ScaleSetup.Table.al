@@ -1,4 +1,4 @@
-table 50001 "ScaleSetup"
+table 60100 "ScaleSetup"
 {
     DataClassification = CustomerContent;
 

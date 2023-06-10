@@ -1,4 +1,4 @@
-codeunit 50006 "Scale waldo" implements IScale
+codeunit 60104 "Scale waldo" implements IScale
 {
 
     procedure GetWeight() Result: Decimal;

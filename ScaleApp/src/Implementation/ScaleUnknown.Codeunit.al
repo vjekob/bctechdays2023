@@ -1,4 +1,4 @@
-codeunit 50004 "Scale Unknown" implements IScale
+codeunit 60102 "Scale Unknown" implements IScale
 {
 
     procedure GetWeight() Result: Decimal;

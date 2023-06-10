@@ -1,4 +1,4 @@
-codeunit 50005 "Scale Vjeko" implements IScale
+codeunit 60103 "Scale Vjeko" implements IScale
 {
 
     procedure GetWeight() Result: Decimal;

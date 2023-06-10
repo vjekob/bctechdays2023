@@ -1,4 +1,4 @@
-enum 50000 "Scales" implements IScale
+enum 60100 "Scales" implements IScale
 {
     Extensible = true;
 

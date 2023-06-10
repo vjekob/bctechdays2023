@@ -1,4 +1,4 @@
-codeunit 50007 "GetWeight New Meth"
+codeunit 60100 "GetWeight New Meth"
 {
     procedure GetWeight(var Item: Record Item);
     var

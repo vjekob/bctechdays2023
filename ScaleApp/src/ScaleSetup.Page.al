@@ -1,4 +1,4 @@
-page 50002 "Scale Setup"
+page 60100 "Scale Setup"
 {
 
     PageType = Card;

@@ -1,4 +1,4 @@
-codeunit 50003 "Scale Default" implements IScale
+codeunit 60101 "Scale Default" implements IScale
 {
 
     procedure GetWeight() Result: Decimal;
