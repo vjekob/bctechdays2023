@@ -1,4 +1,4 @@
-page 50003 "Http Log Card"
+page 50006 "Http Log Card"
 {
     PageType = Card;
     SourceTable = "Http Log";

@@ -1,4 +1,4 @@
-codeunit 50011 "Item Alt-Pic Writer" implements IItemWriter
+codeunit 50055 "Item Alt-Pic Writer" implements IItemWriter
 {
     var
         MimeTypeTok: Label 'image/jpeg', Locked = true;

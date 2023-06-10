@@ -1,19 +1,20 @@
 codeunit 50008 "Azure BLOB Upload Meth"
 {
-    internal procedure Upload(MediaId: Guid)
+    internal procedure Upload(MediaId: Guid) URL: Text;
     var
         IsHandled: Boolean;
     begin
-        OnBeforeUpload(MediaId, IsHandled);
-        DoUpload(MediaId, IsHandled);
-        OnAfterUpload(MediaId);
+        OnBeforeUpload(MediaId, URL, IsHandled);
+        DoUpload(MediaId, URL, IsHandled);
+        OnAfterUpload(MediaId, URL);
     end;
 
-    local procedure DoUpload(MediaId: Guid; IsHandled: Boolean);
+    local procedure DoUpload(MediaId: Guid; var URL: Text; IsHandled: Boolean);
     var
         Setup: Record "Midjourney Setup";
         TenantMedia: Record "Tenant Media";
         StorageServiceAuthorization: Codeunit "Storage Service Authorization";
+        Response: Codeunit "ABS Operation Response";
         Authorization: Interface "Storage Service Authorization";
         AzureBLOB: Codeunit "ABS Blob Client";
         Stream: InStream;
@@ -37,7 +38,14 @@ codeunit 50008 "Azure BLOB Upload Meth"
         AzureBLOB.Initialize(Setup."Azure BLOB Account", Setup."Azure BLOB Container", Authorization);
 
         FileName := GetFileName(MediaId, GetExtensionFromMimeType(TenantMedia."Mime Type"));
-        AzureBLOB.PutBlobBlockBlobStream(FileName, Stream);
+        Response := AzureBLOB.PutBlobBlockBlobStream(FileName, Stream);
+        if not Response.IsSuccessful() then
+            Error(Response.GetError());
+
+        URL := Setup."Azure BLOB Root URL".Trim();
+        if not URL.EndsWith('/') then
+            URL += '/';
+        URL += FileName;
     end;
 
     internal procedure GetExtensionFromMimeType(MimeType: Text[100]): Text
@@ -46,27 +54,31 @@ codeunit 50008 "Azure BLOB Upload Meth"
     begin
         case MimeType of
             'image/jpeg':
-                exit('.jpg');
+                exit('jpg');
             'image/png':
-                exit('.png');
+                exit('png');
             'image/gif':
-                exit('.gif');
+                exit('gif');
         end;
         Error(UnsupportedMimeTypeErr, MimeType);
     end;
 
     internal procedure GetFileName(MediaId: Guid; Extension: Text[100]): Text
+    var
+        Crypto: Codeunit "Cryptography Management";
+        Hash: Text;
     begin
-        exit(StrSubstNo('%1.%2', MediaId, Extension));
+        Hash := Crypto.GenerateHash(Format(MediaId), 1); // SHA1
+        exit(StrSubstNo('%1.%2', Hash, Extension));
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeUpload(MediaId: Guid; var IsHandled: Boolean);
+    local procedure OnBeforeUpload(MediaId: Guid; var URL: Text; var IsHandled: Boolean);
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnAfterUpload(MediaId: Guid);
+    local procedure OnAfterUpload(MediaId: Guid; URL: Text);
     begin
     end;
 }

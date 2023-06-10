@@ -1,10 +1,11 @@
 enum 50001 "Midjourney Request Status"
 {
     Caption = 'Midjourney Request Status';
+    Extensible = false;
 
-    value(0; Sent)
+    value(0; WaitingToStart)
     {
-        Caption = 'Sent';
+        Caption = 'Waiting to Start';
     }
 
     value(1; Pending)
@@ -12,23 +13,23 @@ enum 50001 "Midjourney Request Status"
         Caption = 'Pending';
     }
 
-    value(2; Running)
+    value(2; Paused)
+    {
+        Caption = 'Paused';
+    }
+
+    value(3; Running)
     {
         Caption = 'Running';
     }
 
-    value(3; Done)
+    value(4; Done)
     {
         Caption = 'Done';
     }
 
-    value(4; Error)
+    value(5; Error)
     {
         Caption = 'Error';
-    }
-
-    value(5; Abandoned)
-    {
-        Caption = 'Abandoned';
     }
 }
