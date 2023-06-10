@@ -16,7 +16,7 @@
             "tenant": "default",
             "usePublicURLFromServer": true,
             "schemaUpdateMode": "ForceSync",
-            "startupObjectId": 50005,
+            "startupObjectId": 50003,
             "startupObjectType": "Page"
         }
     ]

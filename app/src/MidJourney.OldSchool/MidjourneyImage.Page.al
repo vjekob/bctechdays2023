@@ -12,15 +12,13 @@ page 50003 "Midjourney Image"
     {
         area(Content)
         {
-            group(Source)
+            field(PictureFld; Rec.Picture)
             {
-                Caption = 'Source Image';
+                ApplicationArea = All;
+                Caption = 'Source Picture';
+                ShowCaption = false;
+                ToolTip = 'Shows the current picture for this item';
 
-                field(Picture; Rec.Picture)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Shows the current picture for this item';
-                }
             }
 
             group(Midjourney)

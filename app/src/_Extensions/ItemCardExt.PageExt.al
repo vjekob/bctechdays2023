@@ -18,7 +18,7 @@ pageextension 50001 "Item Card Ext" extends "Item Card"
     {
         addlast(Navigation_Item)
         {
-            action(UploadMedia)
+            action(Midjourney)
             {
                 Caption = 'Midjourney';
                 Promoted = true;
