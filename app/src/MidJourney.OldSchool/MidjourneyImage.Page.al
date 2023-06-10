@@ -30,8 +30,13 @@ page 50003 "Midjourney Image"
                     ApplicationArea = All;
                     Tooltip = 'Prompt type for Midjourney Imagine request';
                 }
+                field("MidJourney TaskId"; Rec."MidJourney TaskId")
+                {
+                    ApplicationArea = All;
+                    ToolTip = 'Contains the Midjourney Imagine task ID';
+                }
 
-                field(ImageURL; Rec."Picture URL (MidJourney)")
+                field(ImageURL; Rec."Pic-In-Scene URL (MidJourney)")
                 {
                     Caption = 'MidJourney URL';
                     ApplicationArea = All;
@@ -40,7 +45,7 @@ page 50003 "Midjourney Image"
 
                     trigger OnDrillDown()
                     begin
-                        Hyperlink(Rec."Picture URL (MidJourney)");
+                        Hyperlink(Rec."Pic-In-Scene URL (MidJourney)");
                     end;
                 }
 
@@ -53,7 +58,7 @@ page 50003 "Midjourney Image"
                     Width = 150;
                 }
             }
-            field("Picture In Scene"; Rec."Picture In Scene")
+            field("Picture In Scene"; Rec."Pic-In-Scene")
             {
                 ApplicationArea = All;
                 ShowCaption = false;
@@ -79,11 +84,8 @@ page 50003 "Midjourney Image"
                 var
                     Params: Dictionary of [Text, Text];
                 begin
-                    Status := '';
-                    MidjourneyEnabled := false;
-
-                    Task := "Midjourney Task Type"::GetURL;
-                    RunBackgroundTask();
+                    Retry := 0;
+                    RestartTask;
                 end;
             }
         }
@@ -99,7 +101,6 @@ page 50003 "Midjourney Image"
         Task: Enum "Midjourney Task Type";
         AzureBLOBURL: Text;
         ImaginePrompt: Text;
-        MidjourneyTaskID: Text;
         Status: Text;
         MidjourneyEnabled: Boolean;
 
@@ -108,6 +109,16 @@ page 50003 "Midjourney Image"
         StatusGetURLLbl: Label 'Getting URL';
         StatusGetPrompt: Label 'Getting prompt';
         StatusRunImagine: Label 'Running Imagine';
+        Retry: integer;
+
+    local procedure RestartTask()
+    begin
+        Status := '';
+        MidjourneyEnabled := false;
+
+        Task := "Midjourney Task Type"::GetURL;
+        RunBackgroundTask();
+    end;
 
     local procedure RunBackgroundTask()
     var
@@ -137,7 +148,7 @@ page 50003 "Midjourney Image"
                 end;
 
             "Midjourney Task Type"::GetResult:
-                Params.Add('taskId', MidjourneyTaskID);
+                Params.Add('taskId', Rec."MidJourney TaskId");
         end;
 
         CurrPage.EnqueueBackgroundTask(TaskID, Codeunit::"Midjourney Background Task", Params, 120000, PageBackgroundTaskErrorLevel::Ignore);
@@ -171,7 +182,9 @@ page 50003 "Midjourney Image"
 
             "Midjourney Task Type"::RunImagine:
                 begin
-                    Results.Get('taskId', MidjourneyTaskID);
+                    Results.Get('taskId', Rec."MidJourney TaskId");
+                    Rec.Modify();
+
                     Task := "Midjourney Task Type"::GetResult;
                     RunBackgroundTask();
                 end;
@@ -182,7 +195,7 @@ page 50003 "Midjourney Image"
                     Done := DoneTxt = Format(true);
 
                     if Done then begin
-                        Results.Get('url', Rec."Picture URL (MidJourney)");
+                        Results.Get('url', Rec."Pic-In-Scene URL (MidJourney)");
                         Rec.Modify();
                         Rec.DownloadPicInSceneImage();
 
@@ -198,11 +211,19 @@ page 50003 "Midjourney Image"
 
     trigger OnPageBackgroundTaskError(TaskId: Integer; ErrorCode: Text; ErrorText: Text; ErrorCallStack: Text; var IsHandled: Boolean)
     begin
-        Status := '';
         MidjourneyEnabled := true;
         IsHandled := true;
 
-        Error(ErrorText);
+        If Retry >= 3 then begin
+            Status := ErrorText;
+            Error(ErrorText);
+        end
+        else begin
+            Retry += 1;
+            Status := 'Retrying...';
+            Sleep(5000);
+            RestartTask();
+        end;
     end;
 
     trigger OnOpenPage()

@@ -7,19 +7,19 @@ tableextension 50000 "Item Ext" extends Item
             Caption = 'Picture URL (Azure BLOB)';
             DataClassification = CustomerContent;
         }
-        field(50001; "Picture In Scene"; Media)
+        field(50001; "Pic-In-Scene"; Media)
         {
             Caption = 'Picture 2';
             DataClassification = CustomerContent;
         }
-        field(50002; "Alternative Picture"; Media)
-        {
-            Caption = 'Picture 2';
-            DataClassification = CustomerContent;
-        }
-        field(50003; "Picture URL (MidJourney)"; Text[250])
+        field(50003; "Pic-In-Scene URL (MidJourney)"; Text[250])
         {
             Caption = 'Picture URL (MidJourney)';
+            DataClassification = CustomerContent;
+        }
+        field(50004; "MidJourney TaskId"; Text[50])
+        {
+            Caption = 'MidJourney TaskId';
             DataClassification = CustomerContent;
         }
     }

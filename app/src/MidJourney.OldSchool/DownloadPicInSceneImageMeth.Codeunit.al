@@ -16,7 +16,7 @@ codeunit 50056 "DownloadPicInSceneImage Meth"
         if IsHandled then
             exit;
 
-        Item."Picture In Scene".ImportStream(DownloadImageFromURL(Item."Picture URL (MidJourney)"), 'MidJourney');
+        Item."Pic-In-Scene".ImportStream(DownloadImageFromURL(Item."Pic-In-Scene URL (MidJourney)"), 'MidJourney');
         Item.Modify(true);
     end;
 
