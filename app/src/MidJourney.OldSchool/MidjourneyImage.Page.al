@@ -31,18 +31,17 @@ page 50003 "Midjourney Image"
                     Tooltip = 'Prompt type for Midjourney Imagine request';
                 }
 
-                field(ImageURL; ImageURL)
+                field(ImageURL; Rec."Picture URL (MidJourney)")
                 {
-                    Caption = 'Image URL';
+                    Caption = 'MidJourney URL';
                     ApplicationArea = All;
                     ToolTip = 'Contains the Midjourney Imagine image URL';
                     Editable = false;
-                }
 
-                field(MidjourneyImage; '1')
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Shows the result of the Midjourney Imagine request';
+                    trigger OnDrillDown()
+                    begin
+                        Hyperlink(Rec."Picture URL (MidJourney)");
+                    end;
                 }
 
                 field(Status; Status)
@@ -53,6 +52,13 @@ page 50003 "Midjourney Image"
                     Editable = false;
                     Width = 150;
                 }
+            }
+            field("Picture In Scene"; Rec."Picture In Scene")
+            {
+                ApplicationArea = All;
+                ShowCaption = false;
+                ToolTip = 'Shows the picture in scene';
+                Editable = false;
             }
         }
     }
@@ -86,7 +92,7 @@ page 50003 "Midjourney Image"
     var
         TempBlob: Codeunit "Temp Blob";
         Prompt: Enum "Midjourney Prompt";
-        ImageURL: Text;
+    // ImageURL: Text;
 
     // Imagine workflow
     var
@@ -176,7 +182,10 @@ page 50003 "Midjourney Image"
                     Done := DoneTxt = Format(true);
 
                     if Done then begin
-                        Results.Get('url', ImageURL);
+                        Results.Get('url', Rec."Picture URL (MidJourney)");
+                        Rec.Modify();
+                        Rec.DownloadPicInSceneImage();
+
                         Status := '';
                         MidjourneyEnabled := true;
                     end else begin

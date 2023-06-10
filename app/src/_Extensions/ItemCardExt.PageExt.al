@@ -21,14 +21,16 @@ pageextension 50001 "Item Card Ext" extends "Item Card"
             action(Midjourney)
             {
                 Caption = 'Midjourney';
-                Promoted = true;
                 Image = Picture;
-                PromotedOnly = true;
                 ApplicationArea = All;
                 ToolTip = 'Creates a Midjourney image';
                 RunObject = page "Midjourney Image";
                 RunPageLink = "No." = field("No.");
             }
+        }
+        addfirst(Promoted)
+        {
+            actionref(MidjourneyRef; Midjourney) { Visible = true; }
         }
     }
 }

@@ -26,7 +26,7 @@ codeunit 50045 "MidJourney Prompt Impl." implements IMidJourneyPrompt
 
         Prompt := CopyStr(Prompt, 1, StrLen(Prompt) - 2);
 
-        prompt := prompt + ' ' + IMidJourneyAspectRatio.ARPrompt();
+        prompt := prompt + ' ' + IMidJourneyAspectRatio.ARPrompt() + ' --iw 1.25'; //TODO: Also ImageWeight as an interface?
     end;
 
     procedure FixCustomPrompt(CustomPrompt: Text): Text
