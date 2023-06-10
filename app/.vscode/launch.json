@@ -15,7 +15,9 @@
             "enableSqlInformationDebugger": true,
             "tenant": "default",
             "usePublicURLFromServer": true,
-            "schemaUpdateMode": "ForceSync"
+            "schemaUpdateMode": "ForceSync",
+            "startupObjectId": 50005,
+            "startupObjectType": "Page"
         }
     ]
 }
