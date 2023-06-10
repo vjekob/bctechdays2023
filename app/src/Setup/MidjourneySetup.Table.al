@@ -94,7 +94,8 @@ table 50000 "Midjourney Setup"
     var
         Root: Text;
     begin
-        Root := Rec."Midjourney URL";
+        Root := Rec."Midjourney URL".Trim();
+        ;
         if not Root.EndsWith('/') then
             Root += '/';
         exit(Root + Path);

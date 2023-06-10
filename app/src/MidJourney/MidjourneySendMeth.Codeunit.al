@@ -30,7 +30,7 @@ codeunit 50010 "Midjourney Send Meth"
         Request.Content.WriteFrom(RequestBodyText);
 
         Request.Method := 'POST';
-        Request.SetRequestUri(Setup.GetMidjourneyEndpoint('imagine'));
+        Request.SetRequestUri(Setup.GetMidjourneyEndpoint(Path));
 
         Request.GetHeaders(Headers);
         Headers.Clear();
@@ -40,13 +40,16 @@ codeunit 50010 "Midjourney Send Meth"
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
 
+        // TODO Send e-mail to admin
         Client.Send(Request, Response);
         if Response.IsBlockedByEnvironment() then
             Error(BlockedByEnvironmentErr);
 
+        // TODO Show a nicely formatted error message for this
         if not Response.IsSuccessStatusCode() then
             Error(HttpStatusErr, Response.HttpStatusCode, Response.ReasonPhrase);
 
+        // TODO Do something else when this happens
         Response.Content.ReadAs(ResponseBodyText);
         ResponseBody.ReadFrom(ResponseBodyText);
     end;
