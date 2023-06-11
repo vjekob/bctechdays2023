@@ -55,9 +55,9 @@ tableextension 50000 "Item Ext" extends Item
 
     procedure DownloadPicInSceneImage()
     var
-        DownloadPicInSceneImageMeth: Codeunit "DownloadPicInSceneImage Meth";
+        DownloadPicInSceneImageMeth: Codeunit "ImportItemPicInScene Meth";
     begin
-        DownloadPicInSceneImageMeth.DownloadImage(Rec);
+        DownloadPicInSceneImageMeth.ImportImage(Rec."Pic-In-Scene URL (MidJourney)", Rec);
     end;
 
     procedure GetPrompt(): Text

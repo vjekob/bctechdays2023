@@ -1,23 +1,23 @@
-codeunit 50056 "DownloadPicInSceneImage Meth"
+codeunit 50056 "ImportItemPicInScene Meth"
 {
-    internal procedure DownloadImage(var Item: Record Item)
+    internal procedure ImportImage(Url: Text; var Item: Record Item)
     var
         IsHandled: Boolean;
     begin
-        OnBeforeDownloadImage(Item, IsHandled);
+        OnBeforeDownloadImage(Url, Item, IsHandled);
 
-        DoDownloadImage(Item, IsHandled);
+        DoDownloadImage(Url, Item, IsHandled);
 
-        OnAfterDownloadImage(Item);
+        OnAfterDownloadImage(Url, Item);
     end;
 
-    local procedure DoDownloadImage(var Item: Record Item; IsHandled: Boolean);
+    local procedure DoDownloadImage(Url: Text; var Item: Record Item; IsHandled: Boolean);
     begin
         if IsHandled then
             exit;
 
-        Item."Pic-In-Scene".ImportStream(DownloadImageFromURL(Item."Pic-In-Scene URL (MidJourney)"), 'MidJourney');
-        Item.Modify(true);
+        Item."Pic-In-Scene URL (MidJourney)" := Url;
+        Item."Pic-In-Scene".ImportStream(DownloadImageFromURL(Url), 'MidJourney');
     end;
 
     local procedure DownloadImageFromURL(URL: Text) Instr: InStream
@@ -41,12 +41,12 @@ codeunit 50056 "DownloadPicInSceneImage Meth"
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnBeforeDownloadImage(var Item: Record Item; var IsHandled: Boolean);
+    local procedure OnBeforeDownloadImage(Url: Text; var Item: Record Item; var IsHandled: Boolean);
     begin
     end;
 
     [IntegrationEvent(false, false)]
-    local procedure OnAfterDownloadImage(var Item: Record Item);
+    local procedure OnAfterDownloadImage(Url: Text; var Item: Record Item);
     begin
     end;
 }

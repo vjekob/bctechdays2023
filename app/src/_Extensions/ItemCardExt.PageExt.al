@@ -18,29 +18,19 @@ pageextension 50001 "Item Card Ext" extends "Item Card"
     {
         addlast(Navigation_Item)
         {
-            action(Midjourney)
+            action(Imagine)
             {
-                Caption = 'Midjourney';
+                Caption = 'Imagine';
                 Image = Picture;
                 ApplicationArea = All;
                 ToolTip = 'Creates a Midjourney image';
-                RunObject = page "Midjourney Image";
-                RunPageLink = "No." = field("No.");
-            }
-            action(MidjourneyJQ)
-            {
-                Caption = 'Midjourney';
-                Image = Picture;
-                ApplicationArea = All;
-                ToolTip = 'Creates a Midjourney image';
-                RunObject = page "Midjourney Image JQ";
+                RunObject = page "Midjourney Imagine";
                 RunPageLink = "No." = field("No.");
             }
         }
         addfirst(Promoted)
         {
-            actionref(MidjourneyRef; Midjourney) { Visible = true; }
-            actionref(MidjourneyJQRef; MidjourneyJQ) { Visible = true; }
+            actionref(MidjourneyRef; Imagine) { Visible = true; }
         }
     }
 }
