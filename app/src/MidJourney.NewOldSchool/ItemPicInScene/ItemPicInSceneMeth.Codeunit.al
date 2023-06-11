@@ -12,10 +12,10 @@ codeunit 50062 "ItemPic-In-Scene Meth"
         RecRef.SetTable(Item);
         Item.Find();
 
-        Imagine(Item);
+        ImagineScenery(Item);
     end;
 
-    internal procedure Imagine(var Item: Record Item)
+    internal procedure ImagineScenery(var Item: Record Item)
     var
         IsHandled: Boolean;
     begin

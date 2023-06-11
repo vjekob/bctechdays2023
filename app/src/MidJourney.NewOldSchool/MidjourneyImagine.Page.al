@@ -90,10 +90,8 @@ page 50008 "Midjourney Imagine"
                 Image = Picture;
 
                 trigger OnAction()
-                var
-                    ItemPicInSceneMeth: Codeunit "ItemPic-In-Scene Meth";
                 begin
-                    ItemPicInSceneMeth.Imagine(Rec);
+                    REc.ImagineScenery();
                 end;
             }
             action(ImagineBG)

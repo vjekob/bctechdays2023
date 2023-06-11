@@ -66,4 +66,11 @@ tableextension 50000 "Item Ext" extends Item
     begin
         exit(PromptMeth.GetPrompt(Rec."MidJourney Prompt", Rec."Picture URL"));
     end;
+
+    procedure ImagineScenery()
+    var
+        ItemPicInSceneMeth: Codeunit "ItemPic-In-Scene Meth";
+    begin
+        ItemPicInSceneMeth.ImagineScenery(Rec);
+    end;
 }
