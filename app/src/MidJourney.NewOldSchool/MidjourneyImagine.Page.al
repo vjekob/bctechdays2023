@@ -19,6 +19,11 @@ page 50008 "Midjourney Imagine"
                 ShowCaption = false;
                 ToolTip = 'Shows the current picture for this item';
 
+                trigger OnDrillDown()
+                begin
+                    Hyperlink(Rec."Picture URL");
+                end;
+
             }
 
             group(Midjourney)
@@ -29,6 +34,14 @@ page 50008 "Midjourney Imagine"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Contains the URL of the image that MidJourney will use.';
+                    Editable = false;
+                    Visible = false;
+
+
+                    trigger OnDrillDown()
+                    begin
+                        Hyperlink(Rec."Picture URL");
+                    end;
                 }
                 field(Prompt; rec."MidJourney Prompt")
                 {
@@ -41,6 +54,8 @@ page 50008 "Midjourney Imagine"
                     Caption = 'MidJourney URL';
                     ApplicationArea = All;
                     ToolTip = 'Contains the Midjourney Imagine image URL';
+                    Editable = false;
+                    Visible = false;
 
                     trigger OnDrillDown()
                     begin
@@ -51,9 +66,14 @@ page 50008 "Midjourney Imagine"
             field("Picture In Scene"; Rec."Pic-In-Scene")
             {
                 ApplicationArea = All;
+                Caption = 'Picture In Scene';
                 ShowCaption = false;
-                ToolTip = 'Shows the picture in scene';
-                Editable = false;
+                ToolTip = 'Shows the picture for this item in the chosen scenery.';
+
+                trigger OnDrillDown()
+                begin
+                    Hyperlink(Rec."Pic-In-Scene URL (MidJourney)");
+                end;
             }
         }
     }
