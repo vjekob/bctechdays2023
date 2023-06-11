@@ -20,9 +20,9 @@ codeunit 50058 "MidJourney JQ"
 
     local procedure GetMidjourneyURL(var Item: Record Item)
     begin
-        if Item."Picture URL (Azure BLOB)" <> '' then exit;
+        if Item."Picture URL" <> '' then exit;
 
-        Item."Picture URL (Azure BLOB)" := Item.GetAzureBLOBURL();
+        Item."Picture URL" := Item.GetAzureBLOBURL();
     end;
 
     local procedure GetPrompt(var Item: Record Item)

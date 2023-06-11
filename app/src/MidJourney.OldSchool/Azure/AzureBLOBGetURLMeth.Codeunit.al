@@ -17,7 +17,7 @@ codeunit 50003 "Azure BLOB Get URL Meth"
         if IsHandled then
             exit;
 
-        URL := Item."Picture URL (Azure BLOB)";
+        URL := Item."Picture URL";
         if URL <> '' then
             exit;
 

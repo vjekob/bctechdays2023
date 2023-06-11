@@ -4,12 +4,12 @@ pageextension 50001 "Item Card Ext" extends "Item Card"
     {
         addlast(Item)
         {
-            field(PictureURLAzure; Rec."Picture URL (Azure BLOB)")
+            field(PictureURLAzure; Rec."Picture URL")
             {
                 ApplicationArea = All;
                 Editable = false;
-                Caption = 'Picture URL (Azure BLOB)';
-                ToolTip = 'Specifies the URL of this item''s picture in Azure BLOB storage (for Midjourney processing).';
+                Caption = 'Picture URL';
+                ToolTip = 'Specifies the URL of this item''s picture  (for Midjourney processing).';
             }
         }
     }

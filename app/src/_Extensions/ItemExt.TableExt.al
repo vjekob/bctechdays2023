@@ -64,6 +64,6 @@ tableextension 50000 "Item Ext" extends Item
     var
         PromptMeth: Codeunit "Midjourney Prompt Meth";
     begin
-        exit(PromptMeth.GetPrompt(Rec."MidJourney Prompt", Rec."Picture URL (Azure BLOB)"));
+        exit(PromptMeth.GetPrompt(Rec."MidJourney Prompt", Rec."Picture URL"));
     end;
 }

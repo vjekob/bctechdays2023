@@ -165,8 +165,8 @@ page 50003 "Midjourney Image"
                     Results.Get('url', AzureBLOBURL);
                     Task := "Midjourney Task Type"::GetPrompt;
 
-                    if Rec."Picture URL (Azure BLOB)" = '' then begin
-                        Rec."Picture URL (Azure BLOB)" := AzureBLOBURL;
+                    if Rec."Picture URL" = '' then begin
+                        Rec."Picture URL" := AzureBLOBURL;
                         Rec.Modify();
                     end;
 
