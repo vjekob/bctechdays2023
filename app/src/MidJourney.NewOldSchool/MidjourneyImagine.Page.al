@@ -109,6 +109,10 @@ page 50008 "Midjourney Imagine"
                 end;
             }
         }
+        area(Promoted)
+        {
+            actionref(imagineBGRef; ImagineBG) { Visible = true; }
+        }
     }
 
     local procedure GetMidJourneyImageInBackground(var Item: Record Item)

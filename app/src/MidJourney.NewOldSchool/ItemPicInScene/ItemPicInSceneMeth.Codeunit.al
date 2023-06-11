@@ -35,9 +35,18 @@ codeunit 50062 "ItemPic-In-Scene Meth"
         if IsHandled then
             exit;
 
+        ClearPicInSceneImage(Item);
+
         Item.TestField("MidJourney Prompt");
         Url := ImagineWithMidJourneyMeth.GetImageUrl(Item.GetPrompt());
         ImportItemPicInSceneMeth.ImportImage(Url, Item);
+        Item.Modify();
+    end;
+
+    local procedure ClearPicInSceneImage(var Item: Record Item)
+    begin
+        item."Pic-In-Scene URL (MidJourney)" := '';
+        clear(Item."Pic-In-Scene");
         Item.Modify();
     end;
 
