@@ -1,11 +1,6 @@
-codeunit 50063 "MidJourneySend" implements "IMIdJourney Send"
+codeunit 50069 "MidJourney - Send" implements IMidJourneySend
 {
-    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject;
-    begin
-        DoSend(Path, RequestBody, ResponseBody);
-    end;
-
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject);
+    procedure Send(Path: Text; RequestBody: JsonObject; ResponseHandler: Interface "IMidJourneySend ResponseHandler") ResponseBody: JsonObject
     var
         Setup: Record "Midjourney Setup";
         Client: HttpClient;
@@ -33,17 +28,11 @@ codeunit 50063 "MidJourneySend" implements "IMIdJourney Send"
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
 
-        // TODO Send e-mail to admin
-        Client.Send(Request, Response);
-        if Response.IsBlockedByEnvironment() then
-            Error(BlockedByEnvironmentErr);
-
-        // TODO Show a nicely formatted error message for this
-        if not Response.IsSuccessStatusCode() then
-            Error(HttpStatusErr, Response.HttpStatusCode, Response.ReasonPhrase);
+        ResponseHandler.HandleResponse(Response);
 
         // TODO Do something else when this happens
         Response.Content.ReadAs(ResponseBodyText);
         ResponseBody.ReadFrom(ResponseBodyText);
     end;
+
 }
