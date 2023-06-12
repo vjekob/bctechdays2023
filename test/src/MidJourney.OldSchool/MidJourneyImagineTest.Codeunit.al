@@ -12,10 +12,33 @@ codeunit 50202 "MidJourney Imagine Test"
 
     var //Shared Fixtures
         MidjourneySetup: Record "Midjourney Setup";
-        MidJourneyTestKey: label 'c19c7ee6-c590-4aed-996d-67bcacff3273', Locked = true;
+        InValidMidJourneyKey: label 'This-Key-Is-Invalid', Locked = true;
+        ValidMidJourneyKey: label 'c19c7ee6-c590-4aed-996d-67bcacff3273', Locked = true;
         MidJourneyPrompt: Text;
 
     var //Fresh Fixtures
+
+    [Test]
+    procedure ImagineMeth_InValidKey()
+    var
+        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
+        Url: Text;
+    begin
+        // [SCENARIO #issueno] scenario
+        Initialize();
+
+        // [GIVEN] given Setup
+        SetupMidJourney(InValidMidJourneyKey);
+
+        // [GIVEN] Prompt
+        MidJourneyPrompt := 'Darth Vader, filtering sand from sea water, pooring in a glass while standing on a beach with his feet in the water';
+
+        // [WHEN] when
+        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
+
+        // [THEN] then
+        Assert.ExpectedError('Unauthorized');
+    end;
 
     [Test]
     procedure ImagineMeth_NotIsEmpty()
@@ -27,37 +50,16 @@ codeunit 50202 "MidJourney Imagine Test"
         Initialize();
 
         // [GIVEN] given Setup
-        SetupMidJourney();
+        SetupMidJourney(ValidMidJourneyKey);
 
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
+        MidJourneyPrompt := 'Darth Vader, filtering sand from sea water, pooring in a glass while standing on a beach with his feet in the water';
 
         // [WHEN] when
         Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
 
         // [THEN] then
         Assert.IsTrue(Url <> '', 'Url is empty');
-    end;
-
-    [Test]
-    procedure ImagineMeth_IsValidUrl()
-    var
-        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
-        Url: Text;
-    begin
-        // [SCENARIO #issueno] scenario
-        Initialize();
-
-        // [GIVEN] given Setup
-        SetupMidJourney();
-
-        // [GIVEN] Prompt
-        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
-
-        // [WHEN] when
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
-
-        // [THEN] then
         Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
     end;
 
@@ -85,14 +87,14 @@ codeunit 50202 "MidJourney Imagine Test"
         LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"MidJourney Imagine Test");
     end;
 
-    local procedure SetupMidJourney()
+    local procedure SetupMidJourney(TestKey: Text)
     var
         MidjourneySetup: Record "Midjourney Setup";
     begin
         if not MidjourneySetup.Get then
             MidjourneySetup.Insert();
 
-        MidjourneySetup.SetMidjourneyAuthKey(MidJourneyTestKey);
+        MidjourneySetup.SetMidjourneyAuthKey(TestKey);
         MidjourneySetup.Modify();
     end;
 }
