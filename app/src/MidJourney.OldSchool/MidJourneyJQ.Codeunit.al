@@ -35,8 +35,10 @@ codeunit 50058 "MidJourney JQ"
     local procedure RunImagine(var Item: Record Item)
     var
         ImagineMeth: Codeunit "Midjourney Imagine Meth";
+        Setup: Record "Midjourney Setup";
     begin
-        item."MidJourney TaskId" := ImagineMeth.Imagine(Item."MidJourney PromptText");
+        Setup.Get();
+        item."MidJourney TaskId" := ImagineMeth.Imagine(Item."MidJourney PromptText", Setup);
     end;
 
     local procedure GetResult(var Item: Record Item)
@@ -52,6 +54,7 @@ codeunit 50058 "MidJourney JQ"
     local procedure SetMidjourneyResult(var Item: Record Item)
     var
         Result: Record "Midjourney Result" temporary;
+        Setup: Record "Midjourney Setup";
         ResultMeth: Codeunit "Midjourney Result Meth";
         Results: Dictionary of [Text, Text];
         TaskId: Text;
@@ -61,7 +64,9 @@ codeunit 50058 "MidJourney JQ"
         PausedLbl: Label 'Paused';
         RunningLbl: Label 'Running (%1% done)', Comment = '%1 is percentage done';
     begin
-        Result := ResultMeth.Result(Item."MidJourney TaskId");
+        Setup.Get();
+
+        Result := ResultMeth.Result(Item."MidJourney TaskId", Setup);
 
         case Result.Status of
             "Midjourney Request Status"::WaitingToStart:

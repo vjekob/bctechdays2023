@@ -28,6 +28,7 @@ codeunit 50062 "ItemPic-In-Scene Meth"
 
     local procedure DoImagine(var Item: Record Item; IsHandled: Boolean);
     var
+        Setup: Record "Midjourney Setup";
         ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
         ImportItemPicInSceneMeth: Codeunit "ImportItemPicInScene Meth";
         Url: Text;
@@ -38,7 +39,8 @@ codeunit 50062 "ItemPic-In-Scene Meth"
         ClearPicInSceneImage(Item);
 
         Item.TestField("MidJourney Prompt");
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(Item.GetPrompt());
+        Setup.Get();
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(Item.GetPrompt(), Setup);
         ImportItemPicInSceneMeth.ImportImage(Url, Item);
         Item.Modify();
     end;

@@ -63,6 +63,7 @@ codeunit 50011 "Midjourney Background Task"
 
     local procedure RunImagine(Params: Dictionary of [Text, Text])
     var
+        Setup: Record "Midjourney Setup";
         ImagineMeth: Codeunit "Midjourney Imagine Meth";
         Results: Dictionary of [Text, Text];
         Prompt: Text;
@@ -70,7 +71,8 @@ codeunit 50011 "Midjourney Background Task"
     begin
         Params.Get('prompt', Prompt);
 
-        TaskId := ImagineMeth.Imagine(Prompt);
+        Setup.Get();
+        TaskId := ImagineMeth.Imagine(Prompt, Setup);
 
         Results.Add('taskId', TaskId);
         Page.SetBackgroundTaskResult(Results);
@@ -79,6 +81,7 @@ codeunit 50011 "Midjourney Background Task"
     local procedure GetMidjourneyResult(Params: Dictionary of [Text, Text])
     var
         Result: Record "Midjourney Result" temporary;
+        Setup: Record "Midjourney Setup";
         ResultMeth: Codeunit "Midjourney Result Meth";
         Results: Dictionary of [Text, Text];
         TaskId: Text;
@@ -90,7 +93,9 @@ codeunit 50011 "Midjourney Background Task"
     begin
         Params.Get('taskId', TaskId);
 
-        Result := ResultMeth.Result(TaskId);
+        Setup.Get();
+
+        Result := ResultMeth.Result(TaskId, Setup);
 
         case Result.Status of
             "Midjourney Request Status"::WaitingToStart:

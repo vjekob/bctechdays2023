@@ -1,17 +1,16 @@
 codeunit 50010 "Midjourney Send Meth"
 {
-    internal procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
+    internal procedure Send(Path: Text; Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
     var
         IsHandled: Boolean;
     begin
         OnBeforeSend(Path, RequestBody, ResponseBody, IsHandled);
-        DoSend(Path, RequestBody, ResponseBody, IsHandled);
+        DoSend(Path, RequestBody, Setup, ResponseBody, IsHandled);
         OnAfterSend(Path, RequestBody, ResponseBody);
     end;
 
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject; IsHandled: Boolean);
+    local procedure DoSend(Path: Text; RequestBody: JsonObject; Setup: Record "Midjourney Setup"; var ResponseBody: JsonObject; IsHandled: Boolean);
     var
-        Setup: Record "Midjourney Setup";
         Client: HttpClient;
         Request: HttpRequestMessage;
         Response: HttpResponseMessage;
@@ -23,8 +22,6 @@ codeunit 50010 "Midjourney Send Meth"
     begin
         if IsHandled then
             exit;
-
-        Setup.GetForMidjourney();
 
         RequestBody.WriteTo(RequestBodyText);
         Request.Content.WriteFrom(RequestBodyText);

@@ -11,7 +11,8 @@ codeunit 50202 "MidJourney Imagine Test"
         Assert: Codeunit "Assert";
 
     var //Shared Fixtures
-        MidjourneySetup: Record "Midjourney Setup";
+        InValidMidjourneySetup: Record "Midjourney Setup";
+        ValidMidjourneySetup: Record "Midjourney Setup";
         InValidMidJourneyKey: label 'This-Key-Is-Invalid', Locked = true;
         ValidMidJourneyKey: label 'c19c7ee6-c590-4aed-996d-67bcacff3273', Locked = true;
         MidJourneyPrompt: Text;
@@ -27,14 +28,11 @@ codeunit 50202 "MidJourney Imagine Test"
         // [SCENARIO #issueno] scenario
         Initialize();
 
-        // [GIVEN] given Setup
-        SetupMidJourney(InValidMidJourneyKey);
-
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Darth Vader, filtering sand from sea water, pooring in a glass while standing on a beach with his feet in the water';
+        MidJourneyPrompt := 'Steampunk Cat';
 
         // [WHEN] when
-        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
+        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup);
 
         // [THEN] then
         Assert.ExpectedError('Unauthorized');
@@ -49,14 +47,11 @@ codeunit 50202 "MidJourney Imagine Test"
         // [SCENARIO #issueno] scenario
         Initialize();
 
-        // [GIVEN] given Setup
-        SetupMidJourney(ValidMidJourneyKey);
-
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Darth Vader, filtering sand from sea water, pooring in a glass while standing on a beach with his feet in the water';
+        MidJourneyPrompt := 'Steampunk Cat';
 
         // [WHEN] when
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup);
 
         // [THEN] then
         Assert.IsTrue(Url <> '', 'Url is empty');
@@ -79,6 +74,8 @@ codeunit 50202 "MidJourney Imagine Test"
         if IsInitialized then exit;
 
         //SharedFixtures
+        InValidMidjourneySetup := SetupMidJourney(InValidMidJourneyKey);
+        ValidMidjourneySetup := SetupMidJourney(ValidMidJourneyKey);
 
         LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"MidJourney Imagine Test");
 
@@ -87,14 +84,11 @@ codeunit 50202 "MidJourney Imagine Test"
         LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"MidJourney Imagine Test");
     end;
 
-    local procedure SetupMidJourney(TestKey: Text)
-    var
-        MidjourneySetup: Record "Midjourney Setup";
+    local procedure SetupMidJourney(TestKey: Text) MidjourneySetup: Record "Midjourney Setup"
     begin
         if not MidjourneySetup.Get then
             MidjourneySetup.Insert();
 
         MidjourneySetup.SetMidjourneyAuthKey(TestKey);
-        MidjourneySetup.Modify();
     end;
 }
