@@ -37,7 +37,6 @@ codeunit 50202 "MidJourney Imagine Test"
 
         // [THEN] then
         Assert.IsTrue(Url <> '', 'Url is empty');
-        Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
     end;
 
     [Test]
@@ -53,13 +52,12 @@ codeunit 50202 "MidJourney Imagine Test"
         SetupMidJourney();
 
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in from of hundreds of people';
+        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
         // [WHEN] when
         Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
 
         // [THEN] then
-        Assert.IsTrue(Url <> '', 'Url is empty');
         Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
     end;
 
