@@ -1,6 +1,6 @@
 {
     "Factory": {
-        "prefix": "tFactoryWaldo",
+        "prefix": "tAbstractFactoryWaldo",
         "description": "Snippet: Factory",
         "body": [
             "#region ${1:FactoryName}",
