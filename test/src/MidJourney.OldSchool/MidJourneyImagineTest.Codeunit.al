@@ -30,7 +30,7 @@ codeunit 50202 "MidJourney Imagine Test"
         SetupMidJourney();
 
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in from of hundreds of people';
+        MidJourneyPrompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
         // [WHEN] when
         Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt);
