@@ -29,7 +29,7 @@ codeunit 50202 "MidJourney Imagine Test"
         Initialize();
 
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Steampunk Cat';
+        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
         asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup);
@@ -48,7 +48,7 @@ codeunit 50202 "MidJourney Imagine Test"
         Initialize();
 
         // [GIVEN] Prompt
-        MidJourneyPrompt := 'Steampunk Cat';
+        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
         Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup);
@@ -74,8 +74,8 @@ codeunit 50202 "MidJourney Imagine Test"
         if IsInitialized then exit;
 
         //SharedFixtures
-        InValidMidjourneySetup := SetupMidJourney(InValidMidJourneyKey);
-        ValidMidjourneySetup := SetupMidJourney(ValidMidJourneyKey);
+        SetupMidJourney(ValidMidJourneyKey, ValidMidjourneySetup);
+        SetupMidJourney(InValidMidJourneyKey, InValidMidjourneySetup);
 
         LibraryTestInitialize.OnBeforeTestSuiteInitialize(Codeunit::"MidJourney Imagine Test");
 
@@ -84,7 +84,7 @@ codeunit 50202 "MidJourney Imagine Test"
         LibraryTestInitialize.OnAfterTestSuiteInitialize(Codeunit::"MidJourney Imagine Test");
     end;
 
-    local procedure SetupMidJourney(TestKey: Text) MidjourneySetup: Record "Midjourney Setup"
+    local procedure SetupMidJourney(TestKey: Text; var MidjourneySetup: Record "Midjourney Setup")
     begin
         if not MidjourneySetup.Get then
             MidjourneySetup.Insert();

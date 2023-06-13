@@ -1,6 +1,6 @@
 codeunit 50002 "Midjourney Result Meth"
 {
-    internal procedure Result(TaskId: Text; Setup: Record "Midjourney Setup") Result: Record "Midjourney Result" temporary;
+    internal procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup") Result: Record "Midjourney Result" temporary;
     var
         IsHandled: Boolean;
     begin
@@ -9,7 +9,7 @@ codeunit 50002 "Midjourney Result Meth"
         OnAfterResult(TaskId, Result);
     end;
 
-    local procedure DoResult(TaskId: Text; Setup: Record "Midjourney Setup"; var Result: Record "Midjourney Result" temporary; IsHandled: Boolean);
+    local procedure DoResult(TaskId: Text; var Setup: Record "Midjourney Setup"; var Result: Record "Midjourney Result" temporary; IsHandled: Boolean);
     var
         SendMeth: Codeunit "Midjourney Send Meth";
         RequestBody: JsonObject;

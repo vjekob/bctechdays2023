@@ -1,6 +1,6 @@
 codeunit 50001 "Midjourney Imagine Meth"
 {
-    internal procedure Imagine(Prompt: Text; Setup: Record "Midjourney Setup") TaskId: Text
+    internal procedure Imagine(Prompt: Text; var Setup: Record "Midjourney Setup") TaskId: Text
     var
         IsHandled: Boolean;
     begin
@@ -9,7 +9,7 @@ codeunit 50001 "Midjourney Imagine Meth"
         OnAfterImagine(Prompt, TaskId);
     end;
 
-    local procedure DoImagine(Prompt: Text; var TaskId: Text; Setup: Record "Midjourney Setup"; IsHandled: Boolean);
+    local procedure DoImagine(Prompt: Text; var TaskId: Text; var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
     var
         SendMeth: Codeunit "Midjourney Send Meth";
         RequestBody: JsonObject;

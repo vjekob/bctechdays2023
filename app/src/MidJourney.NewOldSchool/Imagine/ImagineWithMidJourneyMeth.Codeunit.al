@@ -1,6 +1,6 @@
 codeunit 50061 "ImagineWithMidJourney Meth"
 {
-    internal procedure GetImageUrl(Prompt: Text; Setup: Record "Midjourney Setup") MidJourneyUrl: Text
+    internal procedure GetImageUrl(Prompt: Text; var Setup: Record "Midjourney Setup") MidJourneyUrl: Text
     var
         IsHandled: Boolean;
     begin
@@ -11,7 +11,7 @@ codeunit 50061 "ImagineWithMidJourney Meth"
         OnAfterGetImage(Prompt, MidJourneyUrl);
     end;
 
-    local procedure DoGetImage(Prompt: Text; var MidJourneyUrl: Text; Setup: Record "Midjourney Setup"; IsHandled: Boolean);
+    local procedure DoGetImage(Prompt: Text; var MidJourneyUrl: Text; var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
     var
         MidjourneyImagineMeth: Codeunit "Midjourney Imagine Meth";
         TaskId: Text;
@@ -19,21 +19,16 @@ codeunit 50061 "ImagineWithMidJourney Meth"
         if IsHandled then
             exit;
 
-
-
         TaskId := MidjourneyImagineMeth.Imagine(Prompt, Setup);
-        MidJourneyUrl := WaitForUrl(TaskId);
+        MidJourneyUrl := WaitForUrl(TaskId, Setup);
     end;
 
-    local procedure WaitForUrl(TaskId: Text) Url: Text
+    local procedure WaitForUrl(TaskId: Text; var Setup: Record "Midjourney Setup") Url: Text
     var
-        Setup: Record "Midjourney Setup";
         MidjourneyResult: Record "Midjourney Result" temporary;
         MidjourneyResultMeth: Codeunit "Midjourney Result Meth";
         Done: Boolean;
     begin
-        Setup.Get();
-
         Done := false;
 
         While not Done do begin

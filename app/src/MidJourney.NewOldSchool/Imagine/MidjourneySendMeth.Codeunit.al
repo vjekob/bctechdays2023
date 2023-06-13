@@ -1,6 +1,6 @@
 codeunit 50010 "Midjourney Send Meth"
 {
-    internal procedure Send(Path: Text; Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
+    internal procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
     var
         IsHandled: Boolean;
     begin
@@ -9,7 +9,7 @@ codeunit 50010 "Midjourney Send Meth"
         OnAfterSend(Path, RequestBody, ResponseBody);
     end;
 
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; Setup: Record "Midjourney Setup"; var ResponseBody: JsonObject; IsHandled: Boolean);
+    local procedure DoSend(Path: Text; RequestBody: JsonObject; var Setup: Record "Midjourney Setup"; var ResponseBody: JsonObject; IsHandled: Boolean);
     var
         Client: HttpClient;
         Request: HttpRequestMessage;

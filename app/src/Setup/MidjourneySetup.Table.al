@@ -36,10 +36,14 @@ table 50000 "Midjourney Setup"
     var
         MidjourneyAuthKey: Label 'BCTD23_Midrange_AuthKey', Locked = true;
         AzureBLOBSharedKey: Label 'BCTD23_AzureBLOB_SharedKey', Locked = true;
+        AuthKey: Text;
 
-    internal procedure GetMidjourneyAuthKey() Result: Text
+    internal procedure GetMidjourneyAuthKey(): Text
     begin
-        if not IsolatedStorage.Get(MidjourneyAuthKey, DataScope::Company, Result) then;
+        if AuthKey = '' then
+            IsolatedStorage.Get(MidjourneyAuthKey, DataScope::Company, AuthKey);
+
+        exit(AuthKey);
     end;
 
     internal procedure TestMidjourneyAuthKey()
@@ -52,6 +56,8 @@ table 50000 "Midjourney Setup"
 
     internal procedure SetMidjourneyAuthKey(KeyValue: Text)
     begin
+        AuthKey := KeyValue;
+
         IsolatedStorage.Set(MidjourneyAuthKey, KeyValue, DataScope::Company);
     end;
 
@@ -62,6 +68,9 @@ table 50000 "Midjourney Setup"
 
     procedure HasMidjourneyAuthKey(): Boolean
     begin
+        if AuthKey <> '' then
+            exit(true);
+
         exit(IsolatedStorage.Contains(MidjourneyAuthKey, DataScope::Company));
     end;
 
@@ -79,13 +88,14 @@ table 50000 "Midjourney Setup"
     var
         ConfirmLbl: Label 'Do you want to clear the Midjourney Auth Key?';
     begin
+        AuthKey := '';
+
         if Confirm(ConfirmLbl) then
             DeleteMidjourneyAuthKey();
     end;
 
     procedure GetForMidjourney()
     begin
-        Rec.Get();
         Rec.TestField("Midjourney URL");
         Rec.TestMidjourneyAuthKey();
     end;
