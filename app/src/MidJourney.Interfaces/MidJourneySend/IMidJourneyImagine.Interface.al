@@ -1,4 +1,4 @@
 interface "IMidJourneyImagine"
 {
-    procedure Imagine(Prompt: Text; IMidJourneySend: interface IMidJourneySend) TaskId: Text
+    procedure Imagine(Prompt: Text; var Setup: Record "Midjourney Setup") TaskId: Text
 }

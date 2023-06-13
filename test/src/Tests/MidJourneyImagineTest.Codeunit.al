@@ -9,6 +9,11 @@ codeunit 50202 "MidJourney Imagine Test"
         IsInitialized: Boolean;
         LibraryInventory: Codeunit "Library - Inventory";
         Assert: Codeunit "Assert";
+        MockImagineUnauthorized: Codeunit "Mock Imagine Unauthorized";
+        MockImagineSuccess: Codeunit "Mock Imagine Success";
+        MockResultStatusDone: Codeunit "Mock Result Status Done";
+        MockResultStatusRunning: Codeunit "Mock Result Status Running";
+        MockResultStatusError: Codeunit "Mock Result Status Error";
 
     var //Shared Fixtures
         InValidMidjourneySetup: Record "Midjourney Setup";
@@ -32,7 +37,7 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
-        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup);
+        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup, MockImagineUnauthorized, MockResultStatusDone);
 
         // [THEN] then
         Assert.ExpectedError('Unauthorized');
@@ -51,14 +56,50 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup);
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusDone);
 
         // [THEN] then
         Assert.IsTrue(Url <> '', 'Url is empty');
         Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
     end;
 
-    local procedure InitializeFreshFixtures()
+    [Test]
+    procedure ImagineMeth_NotDone()
+    var
+        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
+        Url: Text;
+    begin
+        // [SCENARIO #issueno] scenario
+        Initialize();
+
+        // [GIVEN] Prompt
+        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
+
+        // [WHEN] when
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusRunning);
+
+        // [THEN] then
+        Assert.IsTrue(Url = '', 'Url is not empty');
+    end;
+
+    [Test]
+    procedure ImagineMeth_Error()
+    var
+        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
+        Url: Text;
+    begin
+        // [SCENARIO #issueno] scenario
+        Initialize();
+
+        // [GIVEN] Prompt
+        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
+
+        // [WHEN] when
+        asserterror ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusError);
+
+    end;
+
+    procedure InitializeFreshFixtures()
     begin
 
     end;
