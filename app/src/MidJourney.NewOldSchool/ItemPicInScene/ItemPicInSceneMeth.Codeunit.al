@@ -6,27 +6,28 @@ codeunit 50062 "ItemPic-In-Scene Meth"
     var
         Item: Record Item;
         RecRef: RecordRef;
+        Send: Codeunit "MidJourney - Send";
     begin
         Rec.Testfield("Record ID to Process");
         RecRef.Get(Rec."Record ID to Process");
         RecRef.SetTable(Item);
         Item.Find();
 
-        ImagineScenery(Item);
+        ImagineScenery(Item, Send);
     end;
 
-    internal procedure ImagineScenery(var Item: Record Item)
+    internal procedure ImagineScenery(var Item: Record Item; Send: interface IMidJourneySend)
     var
         IsHandled: Boolean;
     begin
         OnBeforeImagine(Item, IsHandled);
 
-        DoImagine(Item, IsHandled);
+        DoImagine(Item, Send, IsHandled);
 
         OnAfterImagine(Item);
     end;
 
-    local procedure DoImagine(var Item: Record Item; IsHandled: Boolean);
+    local procedure DoImagine(var Item: Record Item; var Send: interface IMidJourneySend; IsHandled: Boolean);
     var
         Setup: Record "Midjourney Setup";
         ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
@@ -42,7 +43,7 @@ codeunit 50062 "ItemPic-In-Scene Meth"
 
         Item.TestField("MidJourney Prompt");
         Setup.Get();
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(Item.GetPrompt(), Setup, MidJourneyImagine, MidJourneyResult);
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(Item.GetPrompt(), Setup, MidJourneyImagine, MidJourneyResult, Send);
         ImportItemPicInSceneMeth.ImportImage(Url, Item);
         Item.Modify();
     end;

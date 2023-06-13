@@ -1,4 +1,4 @@
-codeunit 50202 "MidJourney Imagine Test"
+codeunit 50218 "MidJourney Send Test"
 {
     TestPermissions = Disabled;
     Subtype = Test;
@@ -7,8 +7,6 @@ codeunit 50202 "MidJourney Imagine Test"
 
     var
         IsInitialized: Boolean;
-        LibraryInventory: Codeunit "Library - Inventory";
-        Assert: Codeunit "Assert";
         MockImagineUnauthorized: Codeunit "Mock Imagine Unauthorized";
         MockImagineSuccess: Codeunit "Mock Imagine Success";
         MockResultStatusDone: Codeunit "Mock Result Status Done";
@@ -17,6 +15,7 @@ codeunit 50202 "MidJourney Imagine Test"
         MockSendError: Codeunit "Mock Send Error";
         MockSendRunning: Codeunit "Mock Send Running";
         MockSendDoneImageUrl: Codeunit "Mock Send Done ImageUrl";
+        SpySendResponseHandleError: Codeunit "Spy SendResponse Handle Error";
 
     var //Shared Fixtures
         InValidMidjourneySetup: Record "Midjourney Setup";
@@ -26,11 +25,11 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt: Text;
 
     var //Fresh Fixtures
+        RequestBody: JsonObject;
 
     [Test]
-    procedure ImagineMeth_InValidKey()
+    procedure Send_Success()
     var
-        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
         Url: Text;
     begin
         // [SCENARIO #issueno] scenario
@@ -40,16 +39,13 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
-        asserterror Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup, MockImagineUnauthorized, MockResultStatusDone, MockSendDoneImageUrl);
+        MockImagineSuccess.Imagine(MidJourneyPrompt, ValidMidjourneySetup, MockSendDoneImageUrl);
 
-        // [THEN] then
-        Assert.ExpectedError('Unauthorized');
     end;
 
     [Test]
-    procedure ImagineMeth_NotIsEmpty()
+    procedure Send_Error()
     var
-        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
         Url: Text;
     begin
         // [SCENARIO #issueno] scenario
@@ -59,50 +55,8 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
 
         // [WHEN] when
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusDone, MockSendDoneImageUrl);
-
-        // [THEN] then
-        Assert.IsTrue(Url <> '', 'Url is empty');
-        Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
+        asserterror MockSendError.Send('Test', ValidMidjourneySetup, RequestBody, SpySendResponseHandleError)
     end;
-
-    [Test]
-    procedure ImagineMeth_NotDone()
-    var
-        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
-        Url: Text;
-    begin
-        // [SCENARIO #issueno] scenario
-        Initialize();
-
-        // [GIVEN] Prompt
-        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
-
-        // [WHEN] when
-        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusRunning, MockSendRunning);
-
-        // [THEN] then
-        Assert.IsTrue(Url = '', 'Url is not empty');
-    end;
-
-    [Test]
-    procedure ImagineMeth_Error()
-    var
-        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
-        Url: Text;
-    begin
-        // [SCENARIO #issueno] scenario
-        Initialize();
-
-        // [GIVEN] Prompt
-        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
-
-        // [WHEN] when
-        asserterror ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, ValidMidjourneySetup, MockImagineSuccess, MockResultStatusError, MockSendError);
-
-    end;
-
-
 
     procedure InitializeFreshFixtures()
     begin

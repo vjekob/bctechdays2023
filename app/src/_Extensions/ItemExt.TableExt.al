@@ -70,7 +70,8 @@ tableextension 50000 "Item Ext" extends Item
     procedure ImagineScenery()
     var
         ItemPicInSceneMeth: Codeunit "ItemPic-In-Scene Meth";
+        Send: Codeunit "MidJourney - Send";
     begin
-        ItemPicInSceneMeth.ImagineScenery(Rec);
+        ItemPicInSceneMeth.ImagineScenery(Rec, Send);
     end;
 }
