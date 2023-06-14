@@ -17,6 +17,7 @@ codeunit 50202 "MidJourney Imagine Test"
         MockSendError: Codeunit "Mock Send Error";
         MockSendRunning: Codeunit "Mock Send Running";
         MockSendDoneImageUrl: Codeunit "Mock Send Done ImageUrl";
+        SpyImagineSuccess: Codeunit "Spy Imagine isExecuted";
 
     var //Shared Fixtures
         InValidMidjourneySetup: Record "Midjourney Setup";
@@ -26,6 +27,25 @@ codeunit 50202 "MidJourney Imagine Test"
         MidJourneyPrompt: Text;
 
     var //Fresh Fixtures
+
+    [Test]
+    procedure ImagineMeth_IsExecuted()
+    var
+        ImagineWithMidJourneyMeth: Codeunit "ImagineWithMidJourney Meth";
+        Url: Text;
+    begin
+        // [SCENARIO #issueno] scenario
+        Initialize();
+
+        // [GIVEN] Prompt
+        MidJourneyPrompt := 'Marble statue of Julius Caesar dunking a basket ball::2 in a basketball hoop, frog perspective, realistic';
+
+        // [WHEN] when
+        Url := ImagineWithMidJourneyMeth.GetImageUrl(MidJourneyPrompt, InValidMidjourneySetup, SpyImagineSuccess, MockResultStatusDone, MockSendDoneImageUrl);
+
+        // [THEN] then
+        Assert.IsTrue(SpyImagineSuccess.GetIsExecuted, 'Imagine is not executed');
+    end;
 
     [Test]
     procedure ImagineMeth_InValidKey()
