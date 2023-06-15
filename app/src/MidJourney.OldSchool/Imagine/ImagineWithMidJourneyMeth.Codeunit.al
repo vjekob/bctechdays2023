@@ -1,40 +1,41 @@
 codeunit 50061 "ImagineWithMidjourney Meth"
 {
+
     internal procedure GetImageUrl(Prompt: Text) MidjourneyUrl: Text
     var
         Setup: Record "Midjourney Setup";
+        Imagine: Codeunit "Midjourney - Imagine";
+        Result: Codeunit "Midjourney - Result";
     begin
         Setup.Get();
-        MidjourneyUrl := GetImageUrl(Prompt, Setup);
+        MidjourneyUrl := GetImageUrl(Prompt, Setup, Imagine, Result);
     end;
 
-    internal procedure GetImageUrl(Prompt: Text; var Setup: Record "Midjourney Setup") MidjourneyUrl: Text
+    internal procedure GetImageUrl(Prompt: Text; var Setup: Record "Midjourney Setup"; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult) MidjourneyUrl: Text
     var
         IsHandled: Boolean;
     begin
         OnBeforeGetImage(Prompt, MidjourneyUrl, IsHandled);
 
-        DoGetImage(Prompt, MidjourneyUrl, Setup, IsHandled);
+        DoGetImage(Prompt, MidjourneyUrl, Setup, Imagine, Result, IsHandled);
 
         OnAfterGetImage(Prompt, MidjourneyUrl);
     end;
 
-    local procedure DoGetImage(Prompt: Text; var MidjourneyUrl: Text; var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
+    local procedure DoGetImage(Prompt: Text; var MidjourneyUrl: Text; var Setup: Record "Midjourney Setup"; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult; IsHandled: Boolean);
     var
-        MidjourneyImagineMeth: Codeunit "Midjourney Imagine Meth";
         TaskId: Text;
     begin
         if IsHandled then
             exit;
 
-        TaskId := MidjourneyImagineMeth.Imagine(Prompt, Setup);
-        MidjourneyUrl := WaitForUrl(TaskId, Setup);
+        TaskId := Imagine.Imagine(Prompt, Setup);
+        MidjourneyUrl := WaitForUrl(TaskId, Setup, Result);
     end;
 
-    local procedure WaitForUrl(TaskId: Text; var Setup: Record "Midjourney Setup") Url: Text
+    local procedure WaitForUrl(TaskId: Text; var Setup: Record "Midjourney Setup"; Result: Interface IMidJourneyResult) Url: Text
     var
         MidjourneyResult: Record "Midjourney Result" temporary;
-        MidjourneyResultMeth: Codeunit "Midjourney Result Meth";
         Done: Boolean;
     begin
         Setup.Get();
@@ -42,7 +43,7 @@ codeunit 50061 "ImagineWithMidjourney Meth"
         Done := false;
 
         while not Done do begin
-            MidjourneyResult := MidjourneyResultMeth.Result(TaskId, Setup);
+            MidjourneyResult := Result.Result(TaskId, Setup);
 
             case MidjourneyResult.Status of
                 enum::"Midjourney Request Status"::WaitingToStart,
