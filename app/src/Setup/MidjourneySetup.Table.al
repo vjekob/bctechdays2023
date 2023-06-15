@@ -19,10 +19,28 @@ table 50000 "Midjourney Setup"
 
     var
         MidjourneyAuthKey: Label 'BCTD23_Midrange_AuthKey', Locked = true;
+        ConfigurationProvider: Interface IConfigurationProvider;
+        ConfigurationProviderSet: Boolean;
+
+    internal procedure SetConfigurationProvider(Provider: Interface IConfigurationProvider)
+    begin
+        ConfigurationProvider := Provider;
+        ConfigurationProviderSet := true;
+    end;
+
+    local procedure GetConfigurationProvider(): Interface IConfigurationProvider
+    var
+        IsolatedStorageConfigProvider: Codeunit IsolatedStorageConfigProvider;
+    begin
+        if ConfigurationProviderSet then
+            exit(ConfigurationProvider)
+        else
+            exit(IsolatedStorageConfigProvider);
+    end;
 
     internal procedure GetMidjourneyAuthKey() Result: Text
     begin
-        if not IsolatedStorage.Get(MidjourneyAuthKey, DataScope::Company, Result) then;
+        if not GetConfigurationProvider().Get(MidjourneyAuthKey, DataScope::Company, Result) then;
     end;
 
     internal procedure TestMidjourneyAuthKey()
@@ -35,17 +53,17 @@ table 50000 "Midjourney Setup"
 
     internal procedure SetMidjourneyAuthKey(KeyValue: Text)
     begin
-        IsolatedStorage.Set(MidjourneyAuthKey, KeyValue, DataScope::Company);
+        GetConfigurationProvider().Set(MidjourneyAuthKey, KeyValue, DataScope::Company);
     end;
 
     internal procedure DeleteMidjourneyAuthKey()
     begin
-        IsolatedStorage.Delete(MidjourneyAuthKey, DataScope::Company);
+        GetConfigurationProvider().Delete(MidjourneyAuthKey, DataScope::Company);
     end;
 
     procedure HasMidjourneyAuthKey(): Boolean
     begin
-        exit(IsolatedStorage.Contains(MidjourneyAuthKey, DataScope::Company));
+        exit(GetConfigurationProvider().Contains(MidjourneyAuthKey, DataScope::Company));
     end;
 
     procedure ConfigureMidjourneyAuthKey()

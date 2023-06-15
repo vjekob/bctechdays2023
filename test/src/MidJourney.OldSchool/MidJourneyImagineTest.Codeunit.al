@@ -13,10 +13,12 @@ codeunit 50202 "Midjourney Imagine Test"
     var
         Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
+        FakeConfigProvider: Codeunit FakeConfigurationProvider;
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with invalid URL
+        Setup.SetConfigurationProvider(FakeConfigProvider);
         Setup."Midjourney URL" := 'gopher://fake.url/?really';
         Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
 
@@ -35,10 +37,12 @@ codeunit 50202 "Midjourney Imagine Test"
     var
         Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
+        FakeConfigProvider: Codeunit FakeConfigurationProvider;
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with invalid auth key
+        Setup.SetConfigurationProvider(FakeConfigProvider);
         Setup."Midjourney URL" := MidjourneyURL;
         Setup.SetMidjourneyAuthKey('fake-auth-key');
 
@@ -57,10 +61,12 @@ codeunit 50202 "Midjourney Imagine Test"
     var
         Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
+        FakeConfigProvider: Codeunit FakeConfigurationProvider;
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with valid URL and auth key
+        Setup.SetConfigurationProvider(FakeConfigProvider);
         Setup."Midjourney URL" := MidjourneyURL;
         Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
 
