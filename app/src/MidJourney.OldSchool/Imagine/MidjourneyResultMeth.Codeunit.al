@@ -2,14 +2,21 @@ codeunit 50002 "Midjourney Result Meth"
 {
     internal procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
     var
+        Setup: Record "Midjourney Setup";
+    begin
+        Result := Result(TaskId, Setup);
+    end;
+
+    internal procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup") Result: Record "Midjourney Result" temporary;
+    var
         IsHandled: Boolean;
     begin
         OnBeforeResult(TaskId, Result, IsHandled);
-        DoResult(TaskId, Result, IsHandled);
+        DoResult(TaskId, Result, Setup, IsHandled);
         OnAfterResult(TaskId, Result);
     end;
 
-    local procedure DoResult(TaskId: Text; var Result: Record "Midjourney Result" temporary; IsHandled: Boolean);
+    local procedure DoResult(TaskId: Text; var Result: Record "Midjourney Result" temporary; var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
     var
         SendMeth: Codeunit "Midjourney Send Meth";
         RequestBody: JsonObject;
@@ -19,7 +26,7 @@ codeunit 50002 "Midjourney Result Meth"
             exit;
 
         RequestBody.Add('taskId', TaskId);
-        ResponseBody := SendMeth.Send('result', RequestBody);
+        ResponseBody := SendMeth.Send('result', RequestBody, Setup);
         ProcessResponse(ResponseBody, Result);
     end;
 

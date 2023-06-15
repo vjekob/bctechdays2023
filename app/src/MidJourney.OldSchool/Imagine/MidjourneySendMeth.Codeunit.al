@@ -2,16 +2,22 @@ codeunit 50010 "Midjourney Send Meth"
 {
     internal procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
     var
+        Setup: Record "Midjourney Setup";
+    begin
+        ResponseBody := Send(Path, RequestBody, Setup);
+    end;
+
+    internal procedure Send(Path: Text; RequestBody: JsonObject; var Setup: Record "Midjourney Setup") ResponseBody: JsonObject
+    var
         IsHandled: Boolean;
     begin
         OnBeforeSend(Path, RequestBody, ResponseBody, IsHandled);
-        DoSend(Path, RequestBody, ResponseBody, IsHandled);
+        DoSend(Path, RequestBody, ResponseBody, Setup, IsHandled);
         OnAfterSend(Path, RequestBody, ResponseBody);
     end;
 
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject; IsHandled: Boolean);
+    local procedure DoSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject; var Setup: Record "Midjourney Setup"; IsHandled: Boolean);
     var
-        Setup: Record "Midjourney Setup";
         Client: HttpClient;
         Request: HttpRequestMessage;
         Response: HttpResponseMessage;

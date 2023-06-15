@@ -19,9 +19,29 @@ table 50000 "Midjourney Setup"
 
     var
         MidjourneyAuthKey: Label 'BCTD23_Midrange_AuthKey', Locked = true;
+        AuthKeyHandler: Interface IAuthKeyHandler;
+        AuthKeyHandlerIsSet: Boolean;
+
+    local procedure SetAuthKeyHandler(pAuthKeyHandler: Interface IAuthKeyHandler)
+    begin
+        AuthKeyHandlerIsSet := true;
+        AuthKeyHandler := pAuthKeyHandler;
+    end;
+
+    local procedure GetAuthKeyHandler(): Interface IAuthKeyHandler
+    var
+        AuthKeyIsolatedStorage: Codeunit "AuthKey - Isolated Storage";
+    begin
+        if not AuthKeyHandlerIsSet then begin
+            AuthKeyHandler := AuthKeyIsolatedStorage;
+        end;
+
+        exit(AuthKeyHandler);
+    end;
 
     internal procedure GetMidjourneyAuthKey() Result: Text
     begin
+        if not GetAuthKeyHandler().GetKey(MidjourneyAuthKey, DataScope::Company, Result) then;
         if not IsolatedStorage.Get(MidjourneyAuthKey, DataScope::Company, Result) then;
     end;
 
