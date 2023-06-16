@@ -1,6 +1,6 @@
 codeunit 50069 "MidJourney - Send" implements IMidJourneySend
 {
-    procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject; ResponseHandler: Interface "IMidJourneySend ResponseHandler") ResponseBody: JsonObject
+    procedure Send(Path: Text; Setup: Record "Midjourney Setup"; RequestBody: JsonObject; ResponseHandler: Interface "IMidJourneySend ResponseHandler") ResponseBody: JsonObject
     var
         Client: HttpClient;
         Request: HttpRequestMessage;

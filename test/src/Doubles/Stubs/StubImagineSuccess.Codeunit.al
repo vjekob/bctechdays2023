@@ -1,10 +1,10 @@
 codeunit 50203 "Stub Imagine Success" implements IMidJourneyImagine
 {
-    procedure Imagine(Prompt: Text; var Setup: Record "Midjourney Setup"; Send: interface IMidJourneySend; ResponseHandler: Interface "IMidJourneySend ResponseHandler") TaskId: Text
+    procedure Imagine(Prompt: Text; var Factory: Codeunit ImagineFactory) TaskId: Text
     var
         Request: JsonObject;
     begin
-        Send.Send('Path', Setup, Request, ResponseHandler);
+        Factory.Send().Send('Path', Factory.Setup(), Request, Factory.ResponseHandler());
 
         TaskId := '12345';
     end;

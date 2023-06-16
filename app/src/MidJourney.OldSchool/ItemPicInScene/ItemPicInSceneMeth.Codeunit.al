@@ -40,6 +40,7 @@ codeunit 50062 "ItemPic-In-Scene Meth"
         Send: Codeunit "MidJourney - Send";
         ImportItemPicInSceneMeth: Codeunit "ImportItemPicInScene Meth";
         MidJourneySendResponseHandler: Codeunit "MidJourneySend ResponseHandler";
+        Factory: Codeunit ImagineFactory;
         Url: Text;
     begin
         if IsHandled then
@@ -48,7 +49,7 @@ codeunit 50062 "ItemPic-In-Scene Meth"
         ClearPicInSceneImage(Item);
 
         Item.TestField("MidJourney Prompt");
-        Url := Imagine.Imagine(Item.GetPrompt(), Setup, Send, MidJourneySendResponseHandler);
+        Url := Factory.Imagine().Imagine(Item.GetPrompt(), Factory);
         ImportItemPicInSceneMeth.ImportImage(Url, Item);
         Item.Modify();
     end;
