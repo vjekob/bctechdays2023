@@ -1,6 +1,6 @@
 codeunit 50069 "MidJourney - Send" implements IMidJourneySend
 {
-    procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
+    procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject; ResponseHandler: Interface "IMidJourneySend ResponseHandler") ResponseBody: JsonObject
     var
         Client: HttpClient;
         Request: HttpRequestMessage;
@@ -29,13 +29,7 @@ codeunit 50069 "MidJourney - Send" implements IMidJourneySend
 
         Client.Send(Request, Response);
 
-        // TODO Send e-mail to admin
-        if Response.IsBlockedByEnvironment() then
-            Error(BlockedByEnvironmentErr);
-
-        // TODO Show a nicely formatted error message for this
-        if not Response.IsSuccessStatusCode() then
-            Error(HttpStatusErr, Response.HttpStatusCode, Response.ReasonPhrase);
+        ResponseHandler.HandleResponse(Response);
 
         // TODO Do something else when this happens
         Response.Content.ReadAs(ResponseBodyText);
