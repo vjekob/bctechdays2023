@@ -14,7 +14,9 @@ codeunit 50228 "Fake Send Test"
         SpyResponseHandler: Codeunit "Spy ResponseHandler";
         ResponseBody: JsonObject;
     begin
-        ResponseBody := FakeSend.Send('Imagine', Setup, Request, SpyResponseHandler);
+        FakeSend.Initialize(Setup, SpyResponseHandler);
+
+        ResponseBody := FakeSend.Send('Imagine', Request);
 
         Assert.IsTrue(ResponseBody.Contains('imageURL'), 'Doesn''t contain imageURL');
     end;
@@ -28,7 +30,9 @@ codeunit 50228 "Fake Send Test"
         SpyResponseHandler: Codeunit "Spy ResponseHandler";
         ResponseBody: JsonObject;
     begin
-        ResponseBody := FakeSend.Send('Imagine', Setup, Request, SpyResponseHandler);
+        FakeSend.Initialize(Setup, SpyResponseHandler);
+
+        ResponseBody := FakeSend.Send('Imagine', Request);
 
         Assert.IsTrue(SpyResponseHandler.WasCalled, 'Response handler was not called');
     end;

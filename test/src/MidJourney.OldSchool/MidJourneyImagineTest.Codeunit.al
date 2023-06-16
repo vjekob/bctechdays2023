@@ -11,7 +11,6 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_InvalidURL()
     var
-        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         FakeConfigProvider: Codeunit FakeConfigurationProvider;
         StubImagineInvalidUrl: Codeunit "Stub Imagine InvalidUrl";
@@ -21,16 +20,15 @@ codeunit 50202 "Midjourney Imagine Test"
         Url: Text;
         Prompt: Text;
     begin
-        // [GIVEN] Setup with invalid URL
-        Setup.SetConfigurationProvider(FakeConfigProvider);
-        Setup."Midjourney URL" := 'gopher://fake.url/?really';
-        Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
-
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
+        // [GIVEN] Stubbing SendSuccess
+        StubImagineInvalidUrl.Initialize(StubSendSuccess);
+        StubResultStatusDone.Initialize(StubSendSuccess);
+
         // [WHEN] Invoking Midjourney
-        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup, StubImagineInvalidUrl, stubresultstatusdone, StubSendSuccess, spyresponsehandler);
+        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, StubImagineInvalidUrl, stubresultstatusdone);
 
         // [THEN] URL must be empty
         Assert.IsTrue(Url = '', 'Url must be empty');
@@ -39,7 +37,6 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_InvalidAuthKey()
     var
-        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         FakeConfigProvider: Codeunit FakeConfigurationProvider;
         StubImagineUnauthorized: Codeunit "Stub Imagine Unauthorized";
@@ -49,16 +46,15 @@ codeunit 50202 "Midjourney Imagine Test"
         Url: Text;
         Prompt: Text;
     begin
-        // [GIVEN] Setup with invalid auth key
-        Setup.SetConfigurationProvider(FakeConfigProvider);
-        Setup."Midjourney URL" := MidjourneyURL;
-        Setup.SetMidjourneyAuthKey('fake-auth-key');
-
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
+        // [GIVEN] Stubbing SendSuccess
+        StubImagineUnauthorized.Initialize(StubSendSuccess);
+        StubResultStatusRunning.Initialize(StubSendSuccess);
+
         // [WHEN] Invoking Midjourney
-        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup, StubImagineUnauthorized, StubResultStatusRunning, StubSendSuccess, SpyResponseHandler);
+        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, StubImagineUnauthorized, StubResultStatusRunning);
 
         // [THEN] URL must be empty
         Assert.IsTrue(Url = '', 'Url must be empty');
@@ -67,7 +63,6 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_Success()
     var
-        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         FakeConfigProvider: Codeunit FakeConfigurationProvider;
         StubImagineSuccess: Codeunit "Stub Imagine Success";
@@ -77,16 +72,15 @@ codeunit 50202 "Midjourney Imagine Test"
         Url: Text;
         Prompt: Text;
     begin
-        // [GIVEN] Setup with valid URL and auth key
-        Setup.SetConfigurationProvider(FakeConfigProvider);
-        Setup."Midjourney URL" := MidjourneyURL;
-        Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
-
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
+        // [GIVEN] Stubbing SendSuccess
+        StubImagineSuccess.Initialize(StubSendSuccess);
+        StubResultStatusDone.Initialize(StubSendSuccess);
+
         // [WHEN] Invoking Midjourney
-        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup, StubImagineSuccess, StubResultStatusDone, StubSendSuccess, SpyResponseHandler);
+        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, StubImagineSuccess, StubResultStatusDone);
 
         // [THEN] URL must be a well-formed URL
         Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
@@ -95,26 +89,25 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_SendError()
     var
-        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         FakeConfigProvider: Codeunit FakeConfigurationProvider;
-        StubImagineSuccess: Codeunit "Stub Imagine Success";
-        StubResultStatusDone: Codeunit "Stub Result Status Done";
+        FakeImagine: Codeunit "Fake Imagine";
+        FakeResult: Codeunit "Fake Result";
         StubSendError: Codeunit "Stub Send Error";
         SpyResponseHandler: Codeunit "Spy ResponseHandler";
         Url: Text;
         Prompt: Text;
     begin
-        // [GIVEN] Setup with valid URL and auth key
-        Setup.SetConfigurationProvider(FakeConfigProvider);
-        Setup."Midjourney URL" := MidjourneyURL;
-        Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
-
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
+        // [GIVEN] Stubbing SendError
+        FakeImagine.Initialize(StubSendError);
+        FakeResult.Initialize(StubSendError);
+
         // [WHEN] Invoking Midjourney
-        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup, StubImagineSuccess, StubResultStatusDone, StubSendError, SpyResponseHandler);
+        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, FakeImagine, FakeResult);
+
     end;
 
     [Test]
@@ -123,8 +116,8 @@ codeunit 50202 "Midjourney Imagine Test"
         Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         FakeConfigProvider: Codeunit FakeConfigurationProvider;
-        StubImagineSuccess: Codeunit "Stub Imagine Success";
-        StubResultStatusDone: Codeunit "Stub Result Status Done";
+        FakeImagine: Codeunit "Fake Imagine";
+        FakeResult: Codeunit "Fake Result";
         FakeSend: Codeunit "Fake Send";
         SpyResponseHandler: Codeunit "Spy ResponseHandler";
         Url: Text;
@@ -138,8 +131,13 @@ codeunit 50202 "Midjourney Imagine Test"
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
+        // [GIVEN] Stubbing SendError
+        FakeSend.Initialize(Setup, SpyResponseHandler);
+        FakeImagine.Initialize(FakeSend);
+        FakeResult.Initialize(FakeSend);
+
         // [WHEN] Invoking Midjourney
-        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup, StubImagineSuccess, StubResultStatusDone, FakeSend, SpyResponseHandler);
+        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, FakeImagine, FakeResult);
 
         // [THEN] ResponseHandler must have been called
         Assert.IsTrue(SpyResponseHandler.WasCalled, 'ResponseHandler was not called');

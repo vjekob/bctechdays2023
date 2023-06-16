@@ -1,11 +1,11 @@
 codeunit 50204 "Stub Result Status Done" implements IMidJourneyResult
 {
-    procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup"; Send: interface IMidJourneySend; ResponseHandler: Interface "IMidJourneySend ResponseHandler") Result: Record "Midjourney Result" temporary;
-    var
-        Request: JsonObject;
+    procedure Initialize(Send: Interface IMidJourneySend)
     begin
-        Send.Send('Path', Setup, Request, ResponseHandler);
+    end;
 
+    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    begin
         Result.Status := "Midjourney Request Status"::Done;
         Result.URL := 'https://www.waldo.be/'
     end;

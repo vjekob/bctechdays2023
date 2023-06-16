@@ -1,5 +1,14 @@
 codeunit 50061 "ImagineWithMidjourney Meth"
 {
+    var
+        _setup: Record "Midjourney Setup";
+        _setupInitialized: Boolean;
+
+    procedure Initialize(var Setup: Record "Midjourney Setup")
+    begin
+        _setup := Setup;
+        _setupInitialized := true;
+    end;
 
     internal procedure GetImageUrl(Prompt: Text) MidjourneyUrl: Text
     var
@@ -7,45 +16,50 @@ codeunit 50061 "ImagineWithMidjourney Meth"
         Imagine: Codeunit "Midjourney - Imagine";
         Result: Codeunit "Midjourney - Result";
         Send: Codeunit "Midjourney - Send";
-        ResponseHandler: interface "IMidJourneySend ResponseHandler";
+        MidJourneySendResponseHandler: Codeunit "MidJourneySend ResponseHandler";
     begin
-        Setup.Get();
-        MidjourneyUrl := GetImageUrl(Prompt, Setup, Imagine, Result, Send, ResponseHandler);
+        if _setupInitialized then
+            Setup := _setup
+        else
+            Setup.Get();
+
+        Send.Initialize(Setup, MidJourneySendResponseHandler);
+        Imagine.Initialize(Send);
+        Result.Initialize(Send);
+        MidjourneyUrl := GetImageUrl(Prompt, Imagine, Result);
     end;
 
-    internal procedure GetImageUrl(Prompt: Text; var Setup: Record "Midjourney Setup"; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult; Send: Interface IMidJourneySend; ResponseHandler: interface "IMidJourneySend ResponseHandler") MidjourneyUrl: Text
+    internal procedure GetImageUrl(Prompt: Text; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult) MidjourneyUrl: Text
     var
         IsHandled: Boolean;
     begin
         OnBeforeGetImage(Prompt, MidjourneyUrl, IsHandled);
 
-        DoGetImage(Prompt, MidjourneyUrl, Setup, Imagine, Result, Send, ResponseHandler, IsHandled);
+        DoGetImage(Prompt, MidjourneyUrl, Imagine, Result, IsHandled);
 
         OnAfterGetImage(Prompt, MidjourneyUrl);
     end;
 
-    local procedure DoGetImage(Prompt: Text; var MidjourneyUrl: Text; var Setup: Record "Midjourney Setup"; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult; Send: Interface IMidJourneySend; ResponseHandler: interface "IMidJourneySend ResponseHandler"; IsHandled: Boolean);
+    local procedure DoGetImage(Prompt: Text; var MidjourneyUrl: Text; Imagine: Interface IMidJourneyImagine; Result: Interface IMidJourneyResult; IsHandled: Boolean);
     var
         TaskId: Text;
     begin
         if IsHandled then
             exit;
 
-        TaskId := Imagine.Imagine(Prompt, Setup, Send, ResponseHandler);
-        MidjourneyUrl := WaitForUrl(TaskId, Setup, Result, Send, ResponseHandler);
+        TaskId := Imagine.Imagine(Prompt);
+        MidjourneyUrl := WaitForUrl(TaskId, Result);
     end;
 
-    local procedure WaitForUrl(TaskId: Text; var Setup: Record "Midjourney Setup"; Result: Interface IMidJourneyResult; Send: Interface IMidJourneySend; ResponseHandler: Interface "IMidJourneySend ResponseHandler") Url: Text
+    local procedure WaitForUrl(TaskId: Text; Result: Interface IMidJourneyResult) Url: Text
     var
         MidjourneyResult: Record "Midjourney Result" temporary;
         Done: Boolean;
     begin
-        Setup.Get();
-
         Done := false;
 
         while not Done do begin
-            MidjourneyResult := Result.Result(TaskId, Setup, Send, ResponseHandler);
+            MidjourneyResult := Result.Result(TaskId);
 
             case MidjourneyResult.Status of
                 enum::"Midjourney Request Status"::WaitingToStart,

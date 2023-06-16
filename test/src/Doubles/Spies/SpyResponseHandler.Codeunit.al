@@ -3,20 +3,20 @@ codeunit 50226 "Spy ResponseHandler" implements "IMidJourneySend ResponseHandler
     SingleInstance = true;
 
     var
-        ResponseText: Text;
+        _responseText: Text;
 
     procedure HandleResponse(var Response: HttpResponseMessage);
     begin
-        ResponseText := 'Handled';
+        _responseText := 'Handled';
     end;
 
     procedure GetResponseText(): Text;
     begin
-        exit(ResponseText);
+        exit(_responseText);
     end;
 
     procedure WasCalled(): Boolean;
     begin
-        exit(ResponseText <> '');
+        exit(_responseText <> '');
     end;
 }
