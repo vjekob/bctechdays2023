@@ -1,4 +1,6 @@
 interface "IMidjourneyResult"
 {
-    procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup"; Send: Interface IMidJourneySend) Result: Record "Midjourney Result" temporary;
+    procedure Initialize(Send: Interface IMidJourneySend);
+
+    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
 }

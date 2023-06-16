@@ -1,4 +1,6 @@
 interface "IMidJourneySend"
 {
-    procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
+    procedure Initialize(var SetupIn: Record "Midjourney Setup")
+
+    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
 }

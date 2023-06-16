@@ -1,11 +1,11 @@
 codeunit 50208 "Stub Result Status Error" implements IMidJourneyResult
 {
-    procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup"; Send: interface IMidJourneySend) Result: Record "Midjourney Result" temporary;
-    var
-        Request: JsonObject;
+    procedure Initialize(Send: Interface IMidJourneySend);
     begin
-        Send.Send('Path', Setup, Request);
+    end;
 
+    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    begin
         Result.Status := "Midjourney Request Status"::Error;
         Result."Error Message" := 'Error Message';
     end;
