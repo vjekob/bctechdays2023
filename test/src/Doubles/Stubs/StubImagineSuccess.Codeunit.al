@@ -1,4 +1,4 @@
-codeunit 50210 "Stub Imagine Unauthorized" implements IMidJourneyImagine
+codeunit 50203 "Stub Imagine Success" implements IMidJourneyImagine
 {
     procedure Imagine(Prompt: Text; var Setup: Record "Midjourney Setup"; Send: interface IMidJourneySend) TaskId: Text
     var
@@ -6,7 +6,7 @@ codeunit 50210 "Stub Imagine Unauthorized" implements IMidJourneyImagine
     begin
         Send.Send('Path', Setup, Request);
 
-        Error('401: Unauthorized')
+        TaskId := '12345';
     end;
 
 }
