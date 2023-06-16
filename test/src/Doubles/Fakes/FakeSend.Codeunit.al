@@ -1,11 +1,22 @@
-codeunit 50227 "Fake Send" implements IMidJourneySend
+codeunit 50227 "Fake Send" implements IMidjourneySend
 {
-    procedure Send(Path: Text; Setup: Record "Midjourney Setup"; RequestBody: JsonObject; ResponseHandler: Interface "IMidJourneySend ResponseHandler") ResponseBody: JsonObject
+    var
+        _setup: Record "Midjourney Setup";
+        _responseHandler: Interface "IMidJourneySend ResponseHandler";
+
+    procedure Initialize(var SetupIn: Record "Midjourney Setup"; ResponseHandler: Interface "IMidJourneySend ResponseHandler")
+    begin
+        _setup := SetupIn;
+        _responseHandler := ResponseHandler;
+    end;
+
+    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject;
     var
         Response: HttpResponseMessage;
     begin
         ResponseBody.ReadFrom('{"imageURL": "http://www.waldo.be", "status": "Done"}');
 
-        ResponseHandler.HandleResponse(Response);
+        _responseHandler.HandleResponse(Response);
     end;
+
 }

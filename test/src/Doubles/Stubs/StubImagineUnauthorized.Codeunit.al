@@ -1,12 +1,12 @@
 codeunit 50210 "Stub Imagine Unauthorized" implements IMidJourneyImagine
 {
-    procedure Imagine(Prompt: Text; var Factory: Codeunit ImagineFactory) TaskId: Text
-    var
-        Request: JsonObject;
+    procedure Initialize(Send: Interface IMidjourneySend)
     begin
-        Factory.Send().Send('Path', Factory.Setup(), Request, Factory.ResponseHandler());
-
-        Error('401: Unauthorized')
     end;
 
+
+    procedure Imagine(Prompt: Text) TaskId: Text
+    begin
+        Error('401: Unauthorized');
+    end;
 }

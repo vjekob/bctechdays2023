@@ -1,11 +1,11 @@
 codeunit 50223 "Stub Imagine InvalidUrl" implements IMidJourneyImagine
 {
-    procedure Imagine(Prompt: Text; var Factory: Codeunit ImagineFactory) TaskId: Text
-    var
-        Request: JsonObject;
+    procedure Initialize(Send: Interface IMidjourneySend)
     begin
-        Factory.Send().Send('Path', Factory.Setup(), Request, Factory.ResponseHandler());
+    end;
 
+    procedure Imagine(Prompt: Text) TaskId: Text
+    begin
         error('Invalid Url');
     end;
 }

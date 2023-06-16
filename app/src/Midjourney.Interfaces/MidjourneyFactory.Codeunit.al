@@ -1,5 +1,7 @@
-codeunit 50074 "ImagineFactory"
+codeunit 50074 "Midjourney Factory"
 {
+    SingleInstance = true;
+
     #region Setup
     var
         _Setup: Record "MidJourney Setup";
@@ -70,10 +72,10 @@ codeunit 50074 "ImagineFactory"
 
     #region Send
     var
-        _Send: Interface IMidJourneySend;
+        _Send: Interface IMidjourneySend;
         _SendIsDefined: Boolean;
 
-    procedure Send(): Interface IMidJourneySend
+    procedure Send(): Interface IMidjourneySend
     var
         DefaultImplementationCodeunit: Codeunit "MidJourney - Send";
     begin
@@ -83,7 +85,7 @@ codeunit 50074 "ImagineFactory"
         exit(_Send);
     end;
 
-    procedure SetSend(ISend: Interface IMidJourneySend)
+    procedure SetSend(ISend: Interface IMidjourneySend)
     begin
         _Send := ISend;
         _SendIsDefined := true;

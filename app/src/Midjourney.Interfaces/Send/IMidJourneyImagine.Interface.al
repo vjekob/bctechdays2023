@@ -1,4 +1,5 @@
 interface "IMidjourneyImagine"
 {
-    procedure Imagine(Prompt: Text; var Factory: codeunit ImagineFactory) TaskId: Text
+
+    procedure Imagine(Prompt: Text) TaskId: Text
 }

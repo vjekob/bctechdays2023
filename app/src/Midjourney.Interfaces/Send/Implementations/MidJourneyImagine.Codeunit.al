@@ -1,13 +1,19 @@
 codeunit 50067 "Midjourney - Imagine" implements IMidJourneyImagine
 {
-    procedure Imagine(Prompt: Text; var Factory: codeunit ImagineFactory) TaskId: Text
+    var
+        Factory: Codeunit "Midjourney Factory";
+
+    procedure Imagine(Prompt: Text) TaskId: Text
     var
         RequestBody: JsonObject;
         ResponseBody: JsonObject;
         Token: JsonToken;
+        Send: interface IMidjourneySend;
     begin
         RequestBody.Add('prompt', prompt);
-        ResponseBody := Factory.Send().Send('imagine', Factory.Setup(), RequestBody, Factory.ResponseHandler());
+
+        Send := Factory.Send();
+        ResponseBody := Send.Send('imagine', RequestBody);
 
         ResponseBody.Get('taskId', Token);
         TaskId := Token.AsValue().AsText();
