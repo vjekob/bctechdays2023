@@ -1,0 +1,29 @@
+{
+    "Factory": {
+        "prefix": "tAbstractFactoryWaldo",
+        "description": "Snippet: Factory",
+        "body": [
+            "#region ${1:FactoryName}",
+            "var",
+            "\t_${1:FactoryName}: Interface ${2:Interface};",
+            "\t_${1:FactoryName}IsDefined: Boolean;",
+            "",
+            "procedure ${1:FactoryName}(): Interface ${2:Interface}",
+            "var",
+            "\tDefaultImplementationCodeunit: Codeunit ${3:DefaultImplementationCodeunit};",
+            "begin",
+            "\tif not _${1:FactoryName}IsDefined then",
+            "\t\tSet${1:FactoryName}(DefaultImplementationCodeunit);",
+            "",
+            "\texit(_${1:FactoryName});",
+            "end;",
+            "",
+            "procedure Set${1:FactoryName}(I${1:FactoryName}: Interface ${2:Interface})",
+            "begin",
+            "\t_${1:FactoryName} := I${1:FactoryName};",
+            "\t_${1:FactoryName}IsDefined := true;",
+            "end;",
+            "#endregion ${1:FactoryName}"
+        ]
+    }
+}
