@@ -1,17 +1,16 @@
 codeunit 50010 "Midjourney Send Meth"
 {
-    internal procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
+    internal procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
     var
         IsHandled: Boolean;
     begin
         OnBeforeSend(Path, RequestBody, ResponseBody, IsHandled);
-        DoSend(Path, RequestBody, ResponseBody, IsHandled);
+        DoSend(Path, RequestBody, Setup, ResponseBody, IsHandled);
         OnAfterSend(Path, RequestBody, ResponseBody);
     end;
 
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject; IsHandled: Boolean);
+    local procedure DoSend(Path: Text; RequestBody: JsonObject; var Setup: Record "Midjourney Setup"; var ResponseBody: JsonObject; IsHandled: Boolean);
     var
-        Setup: Record "Midjourney Setup";
         Client: HttpClient;
         Request: HttpRequestMessage;
         Response: HttpResponseMessage;
@@ -23,8 +22,6 @@ codeunit 50010 "Midjourney Send Meth"
     begin
         if IsHandled then
             exit;
-
-        Setup.GetForMidjourney();
 
         RequestBody.WriteTo(RequestBodyText);
         Request.Content.WriteFrom(RequestBodyText);
@@ -40,10 +37,11 @@ codeunit 50010 "Midjourney Send Meth"
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
 
-        Client.Send(Request, Response);
-
-        if Response.IsBlockedByEnvironment() then
-            Error(BlockedByEnvironmentErr);
+        if not Client.Send(Request, Response) then
+            if Response.IsBlockedByEnvironment() then
+                Error(BlockedByEnvironmentErr)
+            else
+                Error(GetLastErrorText());
 
         if not Response.IsSuccessStatusCode() then
             Error(HttpStatusErr, Response.HttpStatusCode, Response.ReasonPhrase);

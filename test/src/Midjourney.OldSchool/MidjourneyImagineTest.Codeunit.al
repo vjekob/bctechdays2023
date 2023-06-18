@@ -11,18 +11,20 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_InvalidURL()
     var
+        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with invalid URL
-        SetupMidjourney('gopher://fake.url/?really', MidjourneyAuthKey);
+        Setup."Midjourney URL" := 'gopher://fake.url/?really';
+        Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
 
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
         // [WHEN] Invoking Midjourney
-        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt);
+        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup);
 
         // [THEN] URL must be empty
         Assert.IsTrue(Url = '', 'Url must be empty');
@@ -31,18 +33,20 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_InvalidAuthKey()
     var
+        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with invalid auth key
-        SetupMidjourney(MidjourneyURL, 'fake-auth-key');
+        Setup."Midjourney URL" := MidjourneyURL;
+        Setup.SetMidjourneyAuthKey('fake-auth-key');
 
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
         // [WHEN] Invoking Midjourney
-        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt);
+        asserterror Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup);
 
         // [THEN] URL must be empty
         Assert.IsTrue(Url = '', 'Url must be empty');
@@ -51,36 +55,22 @@ codeunit 50202 "Midjourney Imagine Test"
     [Test]
     procedure ImagineMeth_Success()
     var
+        Setup: Record "Midjourney Setup";
         ImagineWithMidjourneyMeth: Codeunit "ImagineWithMidjourney Meth";
         Url: Text;
         Prompt: Text;
     begin
         // [GIVEN] Setup with valid URL and auth key
-        SetupMidjourney(MidjourneyURL, MidjourneyAuthKey);
+        Setup."Midjourney URL" := MidjourneyURL;
+        Setup.SetMidjourneyAuthKey(MidjourneyAuthKey);
 
         // [GIVEN] Prompt
         Prompt := 'Two old muppets Waldorf and Statler presenting in an aula in front of hundreds of people';
 
         // [WHEN] Invoking Midjourney
-        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt);
+        Url := ImagineWithMidjourneyMeth.GetImageUrl(Prompt, Setup);
 
         // [THEN] URL must be a well-formed URL
         Assert.IsTrue(Url.StartsWith('http'), 'Url is not a valid url');
-    end;
-
-    local procedure SetupMidjourney(URL: Text; AuthKey: Text)
-    var
-        MidjourneySetup: Record "Midjourney Setup";
-    begin
-        if not MidjourneySetup.Get then
-            MidjourneySetup.Insert();
-
-        if URL.Trim() <> '' then
-            MidjourneySetup."Midjourney URL" := URL;
-
-        if (AuthKey.Trim() <> '') then
-            MidjourneySetup.SetMidjourneyAuthKey(AuthKey);
-
-        MidjourneySetup.Modify();
     end;
 }
