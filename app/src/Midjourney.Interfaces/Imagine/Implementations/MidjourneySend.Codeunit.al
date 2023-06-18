@@ -1,15 +1,14 @@
-codeunit 50010 "Midjourney Send Meth"
+codeunit 50069 "Midjourney - Send" implements IMidjourneySend
 {
-    internal procedure Send(Path: Text; var Setup: Record "Midjourney Setup"; RequestBody: JsonObject) ResponseBody: JsonObject
     var
-        IsHandled: Boolean;
+        _setup: Record "Midjourney Setup";
+
+    procedure Initialize(var SetupIn: Record "Midjourney Setup")
     begin
-        OnBeforeSend(Path, RequestBody, ResponseBody, IsHandled);
-        DoSend(Path, RequestBody, Setup, ResponseBody, IsHandled);
-        OnAfterSend(Path, RequestBody, ResponseBody);
+        _setup := SetupIn;
     end;
 
-    local procedure DoSend(Path: Text; RequestBody: JsonObject; var Setup: Record "Midjourney Setup"; var ResponseBody: JsonObject; IsHandled: Boolean);
+    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
     var
         Client: HttpClient;
         Request: HttpRequestMessage;
@@ -20,18 +19,15 @@ codeunit 50010 "Midjourney Send Meth"
         BlockedByEnvironmentErr: Label 'Calling Http APIs is blocked by your Business Central configuration.';
         HttpStatusErr: Label '%1: %2', Comment = '%1 is Http status code (number), %2 is Http status message';
     begin
-        if IsHandled then
-            exit;
-
         RequestBody.WriteTo(RequestBodyText);
         Request.Content.WriteFrom(RequestBodyText);
 
         Request.Method := 'POST';
-        Request.SetRequestUri(Setup.GetMidjourneyEndpoint(Path));
+        Request.SetRequestUri(_setup.GetMidjourneyEndpoint(Path));
 
         Request.GetHeaders(Headers);
         Headers.Clear();
-        Headers.Add('Authorization', Setup.GetMidjourneyAuthKey());
+        Headers.Add('Authorization', _setup.GetMidjourneyAuthKey());
 
         Request.Content.GetHeaders(Headers);
         Headers.Clear();
@@ -48,15 +44,5 @@ codeunit 50010 "Midjourney Send Meth"
 
         Response.Content.ReadAs(ResponseBodyText);
         ResponseBody.ReadFrom(ResponseBodyText);
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnBeforeSend(Path: Text; RequestBody: JsonObject; var ResponseBody: JsonObject; var IsHandled: Boolean);
-    begin
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnAfterSend(Path: Text; RequestBody: JsonObject; ResponseBody: JsonObject);
-    begin
     end;
 }
