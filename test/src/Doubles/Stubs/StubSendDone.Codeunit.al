@@ -8,7 +8,7 @@ codeunit 50241 "Stub Send - Done" implements IMidjourneySend
         _imageURL := ImageURL;
     end;
 
-    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject;
+    procedure Send(Path: Text; RequestBody: JsonObject; Factory: Interface IMidjourneyFactory) ResponseBody: JsonObject;
     begin
         ResponseBody.ReadFrom(StrSubstNo('{ "imageURL": "%1" }', _imageURL));
     end;

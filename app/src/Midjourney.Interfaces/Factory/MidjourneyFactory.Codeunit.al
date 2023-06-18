@@ -1,12 +1,5 @@
-codeunit 50074 "Midjourney Factory"
+codeunit 50074 "Midjourney Factory" implements IMidjourneyFactory
 {
-    SingleInstance = true;
-
-    procedure Reset()
-    begin
-        ClearAll();
-    end;
-
     #region MidjourneySetup
     var
         _MidjourneySetup: Interface IMidjourneySetup;

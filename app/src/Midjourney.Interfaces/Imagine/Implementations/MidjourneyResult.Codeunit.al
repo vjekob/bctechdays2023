@@ -1,9 +1,6 @@
 codeunit 50070 "Midjourney - Result" implements IMidjourneyResult
 {
-    var
-        Factory: Codeunit "Midjourney Factory";
-
-    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    procedure Result(TaskId: Text; Factory: Interface IMidjourneyFactory) Result: Record "Midjourney Result" temporary;
     var
         MidjourneySend: Interface IMidjourneySend;
         RequestBody: JsonObject;
@@ -11,7 +8,7 @@ codeunit 50070 "Midjourney - Result" implements IMidjourneyResult
     begin
         MidjourneySend := Factory.GetMidjourneySend();
         RequestBody.Add('taskId', TaskId);
-        ResponseBody := MidjourneySend.Send('result', RequestBody);
+        ResponseBody := MidjourneySend.Send('result', RequestBody, Factory);
         ProcessResponse(ResponseBody, Result);
     end;
 

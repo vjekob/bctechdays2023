@@ -3,7 +3,7 @@ codeunit 50233 "Spy - Result" implements IMidjourneyResult
     var
         _invoked: Boolean;
 
-    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    procedure Result(TaskId: Text; Factory: Interface IMidjourneyFactory) Result: Record "Midjourney Result" temporary;
     begin
         _invoked := true;
     end;

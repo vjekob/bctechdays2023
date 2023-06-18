@@ -1,9 +1,6 @@
 codeunit 50069 "Midjourney - Send" implements IMidjourneySend
 {
-    var
-        Factory: Codeunit "Midjourney Factory";
-
-    procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
+    procedure Send(Path: Text; RequestBody: JsonObject; Factory: Interface IMidjourneyFactory) ResponseBody: JsonObject
     var
         Setup: Interface IMidjourneySetup;
         Client: HttpClient;

@@ -1,7 +1,6 @@
 codeunit 50209 "Mock Result" implements IMidjourneyResult
 {
     var
-        Factory: Codeunit "Midjourney Factory";
         _invocationCount: Integer;
         _failsWithError: Text;
         _failsWithUnknown: Boolean;
@@ -17,7 +16,7 @@ codeunit 50209 "Mock Result" implements IMidjourneyResult
         _failsWithUnknown := true;
     end;
 
-    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    procedure Result(TaskId: Text; Factory: Interface IMidjourneyFactory) Result: Record "Midjourney Result" temporary;
     var
         MidjourneySend: Interface IMidjourneySend;
     begin
