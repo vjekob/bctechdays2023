@@ -1,25 +1,21 @@
-codeunit 50002 "Midjourney Result Meth"
+codeunit 50070 "Midjourney - Result" implements IMidjourneyResult
 {
-    internal procedure Result(TaskId: Text; var Setup: Record "Midjourney Setup") Result: Record "Midjourney Result" temporary;
     var
-        IsHandled: Boolean;
+        _setup: Record "Midjourney Setup";
+
+    procedure Initialize(var SetupIn: Record "Midjourney Setup")
     begin
-        OnBeforeResult(TaskId, Result, IsHandled);
-        DoResult(TaskId, Setup, Result, IsHandled);
-        OnAfterResult(TaskId, Result);
+        _setup := SetupIn;
     end;
 
-    local procedure DoResult(TaskId: Text; var Setup: Record "Midjourney Setup"; var Result: Record "Midjourney Result" temporary; IsHandled: Boolean);
+    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
     var
-        SendMeth: Codeunit "Midjourney Send Meth";
         RequestBody: JsonObject;
         ResponseBody: JsonObject;
+        MidjourneySendMeth: Codeunit "Midjourney Send Meth";
     begin
-        if IsHandled then
-            exit;
-
         RequestBody.Add('taskId', TaskId);
-        ResponseBody := SendMeth.Send('result', Setup, RequestBody);
+        ResponseBody := MidjourneySendMeth.Send('result', _setup, RequestBody);
         ProcessResponse(ResponseBody, Result);
     end;
 
@@ -63,15 +59,5 @@ codeunit 50002 "Midjourney Result Meth"
     begin
         Result.URL := ImageUrl;
         Result.Status := "Midjourney Request Status"::Done;
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnBeforeResult(TaskId: Text; var Result: Record "Midjourney Result" temporary; IsHandled: Boolean);
-    begin
-    end;
-
-    [IntegrationEvent(false, false)]
-    local procedure OnAfterResult(TaskId: Text; Result: Record "Midjourney Result" temporary)
-    begin
     end;
 }
