@@ -1,4 +1,4 @@
 interface IMidjourneyImagine
 {
-    procedure Imagine(Prompt: Text; MidjourneySend: Interface IMidjourneySend) TaskId: Text
+    procedure Imagine(Prompt: Text) TaskId: Text
 }

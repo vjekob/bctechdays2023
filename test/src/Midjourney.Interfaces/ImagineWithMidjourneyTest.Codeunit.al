@@ -4,6 +4,7 @@ codeunit 50231 "ImagineWithMidjourney Test"
     Subtype = Test;
 
     var
+        Factory: Codeunit "Midjourney Factory";
         Assert: Codeunit Assert;
 
     [Test]
@@ -12,12 +13,13 @@ codeunit 50231 "ImagineWithMidjourney Test"
         ImagineWithMidjourney: Codeunit "ImagineWithMidjourney Meth";
         StubImagineNoTaskId: Codeunit "Stub Imagine - No TaskId";
         SpyResult: Codeunit "Spy - Result";
-        DummySend: Codeunit "Dummy - Send";
     begin
-        // Act
-        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt', StubImagineNoTaskId, SpyResult, DummySend);
+        Factory.Reset();
+        Factory.SetMidjourneyImagine(StubImagineNoTaskId);
+        Factory.SetMidjourneyResult(SpyResult);
 
-        // Assert
+        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt');
+
         Assert.IsFalse(SpyResult.IsInvoked(), 'SpyResult should not have been called');
     end;
 
@@ -27,16 +29,15 @@ codeunit 50231 "ImagineWithMidjourney Test"
         ImagineWithMidjourney: Codeunit "ImagineWithMidjourney Meth";
         StubImagineSuccess: Codeunit "Stub Imagine - Success";
         MockResult: Codeunit "Mock Result";
-        DummySend: Codeunit "Dummy - Send";
     begin
-        // Arrange
         ImagineWithMidjourney.SetRetryDelay(0);
         MockResult.SetFailsWithUnknown();
+        Factory.Reset();
+        Factory.SetMidjourneyImagine(StubImagineSuccess);
+        Factory.SetMidjourneyResult(MockResult);
 
-        // Act
-        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt', StubImagineSuccess, MockResult, DummySend);
+        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt');
 
-        // Assert
         Assert.ExpectedError('Unknown Midjourney Status!');
     end;
 
@@ -46,17 +47,15 @@ codeunit 50231 "ImagineWithMidjourney Test"
         ImagineWithMidjourney: Codeunit "ImagineWithMidjourney Meth";
         StubImagineSuccess: Codeunit "Stub Imagine - Success";
         MockResult: Codeunit "Mock Result";
-        DummySend: Codeunit "Dummy - Send";
         ErrorToThrow: Label 'Something went wrong', Locked = true;
     begin
-        // Arrange
         ImagineWithMidjourney.SetRetryDelay(0);
         MockResult.SetFailsWithError(ErrorToThrow);
+        Factory.SetMidjourneyImagine(StubImagineSuccess);
+        Factory.SetMidjourneyResult(MockResult);
 
-        // Act
-        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt', StubImagineSuccess, MockResult, DummySend);
+        asserterror ImagineWithMidjourney.GetImageUrl('Dummy prompt');
 
-        // Assert
         Assert.ExpectedError(ErrorToThrow);
     end;
 
@@ -66,16 +65,14 @@ codeunit 50231 "ImagineWithMidjourney Test"
         ImagineWithMidjourney: Codeunit "ImagineWithMidjourney Meth";
         StubImagineSuccess: Codeunit "Stub Imagine - Success";
         MockResult: Codeunit "Mock Result";
-        DummySend: Codeunit "Dummy - Send";
         Url: Text;
     begin
-        // Arrange
         ImagineWithMidjourney.SetRetryDelay(0);
+        Factory.SetMidjourneyImagine(StubImagineSuccess);
+        Factory.SetMidjourneyResult(MockResult);
 
-        // Act
-        Url := ImagineWithMidjourney.GetImageUrl('Dummy prompt', StubImagineSuccess, MockResult, DummySend);
+        Url := ImagineWithMidjourney.GetImageUrl('Dummy prompt');
 
-        // Assert
         Assert.IsTrue(Url <> '', 'Url should not be empty');
     end;
 }

@@ -1,6 +1,6 @@
 codeunit 50232 "Stub Imagine - No TaskId" implements IMidjourneyImagine
 {
-    procedure Imagine(Prompt: Text; MidjourneySend: Interface IMidjourneySend) TaskId: Text;
+    procedure Imagine(Prompt: Text) TaskId: Text;
     var
         Json: JsonObject;
         Token: JsonToken;

@@ -91,16 +91,11 @@ table 50000 "Midjourney Setup"
         Rec.TestMidjourneyAuthKey();
     end;
 
-    procedure GetMidjourneyEndpoint(Path: Text): Text;
+    procedure ToMidjourneySetup(): Interface IMidjourneySetup
     var
-        Root: Text;
+        MidjourneySetup: Codeunit MidjourneySetup;
     begin
-        Root := Rec."Midjourney URL".Trim();
-        ;
-        if not Root.EndsWith('/') then
-            Root += '/';
-        exit(Root + Path);
+        MidjourneySetup.Initialize(Rec."Midjourney URL", Rec.GetMidjourneyAuthKey());
+        exit(MidjourneySetup);
     end;
-
-
 }

@@ -1,15 +1,11 @@
 codeunit 50069 "Midjourney - Send" implements IMidjourneySend
 {
     var
-        _setup: Record "Midjourney Setup";
-
-    procedure Initialize(var SetupIn: Record "Midjourney Setup")
-    begin
-        _setup := SetupIn;
-    end;
+        Factory: Codeunit "Midjourney Factory";
 
     procedure Send(Path: Text; RequestBody: JsonObject) ResponseBody: JsonObject
     var
+        Setup: Interface IMidjourneySetup;
         Client: HttpClient;
         Request: HttpRequestMessage;
         Response: HttpResponseMessage;
@@ -19,15 +15,17 @@ codeunit 50069 "Midjourney - Send" implements IMidjourneySend
         BlockedByEnvironmentErr: Label 'Calling Http APIs is blocked by your Business Central configuration.';
         HttpStatusErr: Label '%1: %2', Comment = '%1 is Http status code (number), %2 is Http status message';
     begin
+        Setup := Factory.GetMidjourneySetup();
+
         RequestBody.WriteTo(RequestBodyText);
         Request.Content.WriteFrom(RequestBodyText);
 
         Request.Method := 'POST';
-        Request.SetRequestUri(_setup.GetMidjourneyEndpoint(Path));
+        Request.SetRequestUri(Setup.GetEndpoint(Path));
 
         Request.GetHeaders(Headers);
         Headers.Clear();
-        Headers.Add('Authorization', _setup.GetMidjourneyAuthKey());
+        Headers.Add('Authorization', Setup.AuthorizationKey());
 
         Request.Content.GetHeaders(Headers);
         Headers.Clear();

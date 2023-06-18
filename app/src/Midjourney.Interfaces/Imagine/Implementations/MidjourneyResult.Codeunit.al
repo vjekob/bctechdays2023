@@ -1,10 +1,15 @@
 codeunit 50070 "Midjourney - Result" implements IMidjourneyResult
 {
-    procedure Result(TaskId: Text; MidjourneySend: Interface IMidjourneySend) Result: Record "Midjourney Result" temporary;
     var
+        Factory: Codeunit "Midjourney Factory";
+
+    procedure Result(TaskId: Text) Result: Record "Midjourney Result" temporary;
+    var
+        MidjourneySend: Interface IMidjourneySend;
         RequestBody: JsonObject;
         ResponseBody: JsonObject;
     begin
+        MidjourneySend := Factory.GetMidjourneySend();
         RequestBody.Add('taskId', TaskId);
         ResponseBody := MidjourneySend.Send('result', RequestBody);
         ProcessResponse(ResponseBody, Result);

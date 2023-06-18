@@ -4,6 +4,7 @@ codeunit 50235 ImagineTest
     Subtype = Test;
 
     var
+        Factory: Codeunit "Midjourney Factory";
         Assert: Codeunit Assert;
 
     [Test]
@@ -12,10 +13,11 @@ codeunit 50235 ImagineTest
         Imagine: Codeunit "Midjourney - Imagine";
         StubNoTaskId: Codeunit "Stub Send - No TaskId";
     begin
-        // Act
-        asserterror Imagine.Imagine('Dummy prompt', StubNoTaskId);
+        Factory.Reset();
+        Factory.SetMidjourneySend(StubNoTaskId);
 
-        // Assert
+        asserterror Imagine.Imagine('Dummy prompt');
+
         Assert.ExpectedError('There is no property with the ''taskId'' key on the JSON object.');
     end;
 
@@ -26,10 +28,11 @@ codeunit 50235 ImagineTest
         StubSuccess: Codeunit "Stub Send - Success";
         TaskId: Text;
     begin
-        // Act
-        TaskId := Imagine.Imagine('Dummy prompt', StubSuccess);
+        Factory.Reset();
+        Factory.SetMidjourneySend(StubSuccess);
 
-        // Assert
+        TaskId := Imagine.Imagine('Dummy prompt');
+
         Assert.IsTrue(TaskId <> '', 'TaskId is empty');
     end;
 }
