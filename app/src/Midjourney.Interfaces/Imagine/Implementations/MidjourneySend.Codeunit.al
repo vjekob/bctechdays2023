@@ -3,16 +3,14 @@ codeunit 50069 "Midjourney - Send" implements IMidjourneySend
     procedure Send(Path: Text; RequestBody: JsonObject; Factory: Interface IMidjourneyFactory) ResponseBody: JsonObject
     var
         Setup: Interface IMidjourneySetup;
-        Client: HttpClient;
+        Client: Interface IHttpClient;
         Request: HttpRequestMessage;
-        Response: HttpResponseMessage;
+        Response: Interface IHttpResponseMessage;
         Headers: HttpHeaders;
         RequestBodyText: Text;
-        ResponseBodyText: Text;
-        BlockedByEnvironmentErr: Label 'Calling Http APIs is blocked by your Business Central configuration.';
-        HttpStatusErr: Label '%1: %2', Comment = '%1 is Http status code (number), %2 is Http status message';
     begin
         Setup := Factory.GetMidjourneySetup();
+        Client := Factory.GetHttpClient();
 
         RequestBody.WriteTo(RequestBodyText);
         Request.Content.WriteFrom(RequestBodyText);
@@ -28,16 +26,45 @@ codeunit 50069 "Midjourney - Send" implements IMidjourneySend
         Headers.Clear();
         Headers.Add('Content-Type', 'application/json');
 
-        if not Client.Send(Request, Response) then
+        if not Client.Send(Request, Response) then begin
             if Response.IsBlockedByEnvironment() then
-                Error(BlockedByEnvironmentErr)
+                BlockedByEnvironment(Request, Factory)
             else
-                Error(GetLastErrorText());
+                TransportError(Factory);
+            Error('');
+        end;
 
-        if not Response.IsSuccessStatusCode() then
-            Error(HttpStatusErr, Response.HttpStatusCode, Response.ReasonPhrase);
+        if not Response.IsSuccessStatusCode() then begin
+            HttpError(Response, Factory);
+            Error('');
+        end;
 
-        Response.Content.ReadAs(ResponseBodyText);
-        ResponseBody.ReadFrom(ResponseBodyText);
+        ResponseBody := Response.GetResponseBody();
+    end;
+
+    local procedure BlockedByEnvironment(Message: HttpRequestMessage; Factory: Interface IMidjourneyFactory)
+    var
+        BlockedByEnvironmentHandler: Interface IBlockedByEnvironmentHandler;
+    begin
+        BlockedByEnvironmentHandler := Factory.GetBlockedByEnvironmentHandler();
+        BlockedByEnvironmentHandler.HandleBlockedByEnvironment(Message.Method, Message.GetRequestUri());
+    end;
+
+    local procedure HttpError(Response: Interface IHttpResponseMessage; Factory: Interface IMidjourneyFactory)
+    var
+        HttpErrorHandler: Interface IHttpErrorHandler;
+        Body: Text;
+    begin
+        Body := Response.GetResponseBodyAsText();
+        HttpErrorHandler := Factory.GetHttpErrorHandler();
+        HttpErrorHandler.HandleError(Response.HttpStatusCode, Response.ReasonPhrase, Body);
+    end;
+
+    local procedure TransportError(Factory: Interface IMidjourneyFactory)
+    var
+        TransportErrorHandler: Interface ITransportErrorHandler;
+    begin
+        TransportErrorHandler := Factory.GetTransportErrorHandler();
+        TransportErrorHandler.HandleError(GetLastErrorText());
     end;
 }

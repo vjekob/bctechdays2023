@@ -112,4 +112,92 @@ codeunit 50074 "Midjourney Factory" implements IMidjourneyFactory
         _ConfigurationProviderIsDefined := true;
     end;
     #endregion ConfigurationProvider
+
+    #region HttpClient
+    var
+        _HttpClient: Interface IHttpClient;
+        _HttpClientIsDefined: Boolean;
+
+    procedure GetHttpClient(): Interface IHttpClient
+    var
+        DefaultImplementationCodeunit: Codeunit HttpClient;
+    begin
+        if not _HttpClientIsDefined then
+            SetHttpClient(DefaultImplementationCodeunit);
+
+        exit(_HttpClient);
+    end;
+
+    procedure SetHttpClient(IHttpClient: Interface IHttpClient)
+    begin
+        _HttpClient := IHttpClient;
+        _HttpClientIsDefined := true;
+    end;
+    #endregion HttpClient
+
+    #region BlockedByEnvironmentHandler
+    var
+        _BlockedByEnvironmentHandler: Interface IBlockedByEnvironmentHandler;
+        _BlockedByEnvironmentHandlerIsDefined: Boolean;
+
+    procedure GetBlockedByEnvironmentHandler(): Interface IBlockedByEnvironmentHandler
+    var
+        DefaultImplementationCodeunit: Codeunit DefaultBlockedByEnvHandler;
+    begin
+        if not _BlockedByEnvironmentHandlerIsDefined then
+            SetBlockedByEnvironmentHandler(DefaultImplementationCodeunit);
+
+        exit(_BlockedByEnvironmentHandler);
+    end;
+
+    procedure SetBlockedByEnvironmentHandler(IBlockedByEnvironmentHandler: Interface IBlockedByEnvironmentHandler)
+    begin
+        _BlockedByEnvironmentHandler := IBlockedByEnvironmentHandler;
+        _BlockedByEnvironmentHandlerIsDefined := true;
+    end;
+    #endregion BlockedByEnvironmentHandler
+
+    #region HttpErrorHandler
+    var
+        _HttpErrorHandler: Interface IHttpErrorHandler;
+        _HttpErrorHandlerIsDefined: Boolean;
+
+    procedure GetHttpErrorHandler(): Interface IHttpErrorHandler
+    var
+        DefaultImplementationCodeunit: Codeunit DefaultHttpErrorHandler;
+    begin
+        if not _HttpErrorHandlerIsDefined then
+            SetHttpErrorHandler(DefaultImplementationCodeunit);
+
+        exit(_HttpErrorHandler);
+    end;
+
+    procedure SetHttpErrorHandler(IHttpErrorHandler: Interface IHttpErrorHandler)
+    begin
+        _HttpErrorHandler := IHttpErrorHandler;
+        _HttpErrorHandlerIsDefined := true;
+    end;
+    #endregion HttpErrorHandler
+
+    #region TransportErrorHandler
+    var
+        _TransportErrorHandler: Interface ITransportErrorHandler;
+        _TransportErrorHandlerIsDefined: Boolean;
+
+    procedure GetTransportErrorHandler(): Interface ITransportErrorHandler
+    var
+        DefaultImplementationCodeunit: Codeunit DefaultTransportErrorHandler;
+    begin
+        if not _TransportErrorHandlerIsDefined then
+            SetTransportErrorHandler(DefaultImplementationCodeunit);
+
+        exit(_TransportErrorHandler);
+    end;
+
+    procedure SetTransportErrorHandler(ITransportErrorHandler: Interface ITransportErrorHandler)
+    begin
+        _TransportErrorHandler := ITransportErrorHandler;
+        _TransportErrorHandlerIsDefined := true;
+    end;
+    #endregion TransportErrorHandler
 }
