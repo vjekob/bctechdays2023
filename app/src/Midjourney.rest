@@ -1,0 +1,25 @@
+# Imagine
+# @name imagine
+
+post https://api.midjourneyapi.io/v2/imagine
+Authorization: c19c7ee6-c590-4aed-996d-67bcacff3273
+Content-type: application/json
+
+{
+    "prompt": "waldo is an architect, he designs::2 great software --ar 1:1 --iw 2"
+}
+
+### 
+
+@taskId = {{imagine.response.body.$.taskId}}
+
+###
+
+post https://api.midjourneyapi.io/v2/result
+Authorization: c19c7ee6-c590-4aed-996d-67bcacff3273
+Content-type: application/json
+
+{
+    "taskId": {{taskId}}
+}
+
